@@ -22,9 +22,9 @@ def caluclate(imagePath, truthPath, info, thresh = 2000, height = 2000):
     pred = pred.ravel()
     truth = truth.ravel()
 
+
     pred1 = pred[(pred == 255) | (truth == 255)]
     truth1 = truth[(pred == 255) | (truth == 255)]
-
 
 
     res = jaccard_similarity_score(truth1, pred1)
@@ -34,22 +34,24 @@ def caluclate(imagePath, truthPath, info, thresh = 2000, height = 2000):
 
 
 def calc_params1(imgPath, truthPath):
-    old_x = 100
-    old_y = 0
 
-    step = 10
-    new_x = old_x + step
-    new_y = caluclate(imgPath, truthPath, 0, 2000, new_x)
-    print("old_x = " + str(old_x) + " old_y = " + str(old_y) + " new_x = " + str(new_x) + " new_y = " + str(new_y))
-    while new_y >= old_y :
-        old_x = new_x
-        old_y = new_y
-        new_x = old_x + step
-        new_y = caluclate(imgPath, truthPath, 0, 2000, new_x)
-        print("old_x = " + str(old_x) + " old_y = " + str(old_y) + " new_x = " + str(new_x) + " new_y = " + str(new_y))
+    results = []
+    max = max_i = max_j = 0
+    for i in range(3500, 3700, 20):
+        temp_res = []
+        for j in range(90, 121, 10):
+            new_res = caluclate(imgPath, truthPath, 0, i, j)
+            print("new result =  " + str(new_res) + " i =  " + str(i) + " j = " + str(j))
+            temp_res.append(new_res)
+            if (new_res > max) :
+                max = new_res
+                max_i = i
+                max_j = j
+        results.append(temp_res)
+        print("################")
 
-    print("result: ")
-    print("new_x = " + str(new_x) + " new_y = " + str(new_y))
+    print("max = " + str(max) + " i = " + str(max_i) + " j = " + str(max_j))
+    return results
 
 
 
@@ -63,22 +65,33 @@ def calc_params1(imgPath, truthPath):
 
 
 
-imagePath = "papka/AllRings/rings11.png"
-truthPath = "papka/AllRings/marked11.png"
+imagePath = "papka/AllRings/rings8.png"
+truthPath = "papka/AllRings/marked8.png"
 
 
 start_time = time.time()
 
-jaccard = caluclate(imagePath, truthPath,  1, 2000, 110)
+
+#jaccard = caluclate(imagePath, truthPath,  1, 2892, 101)
+#print(jaccard)
+
+#jaccard = caluclate(imagePath, truthPath,  1, 2870, 95)
+#print(jaccard)
+
+#jaccard = caluclate(imagePath, truthPath,  1, 2700, 93)
+#print(jaccard)
+
+jaccard = caluclate(imagePath, truthPath,  1, 3640, 90)
 print(jaccard)
 
-#calc_params1(imagePath, truthPath)
+#res = calc_params1(imagePath, truthPath)
+
+#count = 2000
+#for r in res:
+#    print('j = ' + str(r) + 'i = ' + str(count))
+#    count += 100
 
 print("--- %s seconds ---" % (time.time() - start_time))
 
 
-
-#start_time = time.time()
-
-#print("--- %s seconds ---" % (time.time() - start_time))
 

@@ -138,13 +138,15 @@ def findRingsAccumulative(img, showInfo=0, thresh_bound = 2000, height_bound=0):
     return result
 
 
-def findRingsConnected(img, showInfo=0, thresh_bound = 2000, height_bound=0):
+def findRingsConnected(img, showInfo = 0, thresh_bound = 2000, height_bound=0):
+
     contr_img = equal_contrast(img)
 
     # преобразуем в полярную систему координат
     polar = cv.linearPolar(contr_img, (contr_img.shape[1] // 2, contr_img.shape[0] // 2), contr_img.shape[1] // 2, cv.WARP_FILL_OUTLIERS)
     convolved_polar = ndimage.convolve(np.float32(polar), CONV_KERNEL)
     abs_polar = np.abs(convolved_polar)
+
 
     if showInfo == 1:
         cv.imwrite("results/equaled.png", contr_img)
@@ -199,20 +201,24 @@ def findRingsConnected(img, showInfo=0, thresh_bound = 2000, height_bound=0):
 
     # !!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
+
+
+    heights = heights[1:]
+    idx = np.where(heights >= height_bound)
+    idx = idx[0] + 1
+    #print('idx = ' ,idx)
+
+    #print('labels = ', labels)
     outputImg = np.zeros(labels.shape)
-    for i in range(1, num_labels):
-        if heights[i] >= height_bound:
-            outputImg[labels == i] = 255
+    outputImg[np.isin(labels, idx)] = 255
+
 
 
     polar = cv.linearPolar(img, (img.shape[1] // 2, img.shape[0] // 2), img.shape[1] // 2, cv.WARP_FILL_OUTLIERS)
     polar = cv.cvtColor(polar, cv.COLOR_GRAY2RGB)
-    for i in range(0, outputImg.shape[0]):
-        for j in range(0, outputImg.shape[1]):
-            if j < 400:
-                continue
-            if outputImg[i, j] == 255:
-                polar[i , j] = (0, 0, 255)
+
+    outputImg[:, 0:400] = 0
+    polar[outputImg == 255] = (0, 0, 255)
 
     result = cv.linearPolar(polar, (polar.shape[1] // 2, polar.shape[0] // 2), polar.shape[1] // 2,
                             cv.WARP_INVERSE_MAP + cv.WARP_FILL_OUTLIERS)

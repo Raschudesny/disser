@@ -105,5 +105,9 @@ venv.bak/
 
 .DS_Store
 
-/PycharmProjects/disserProj/results
-/PycharmProjects/disserProj/papka
+/PycharmProjects/disserProj/.idea
+/PycharmProjects/disserProj/papka/Rings
+/PycharmProjects/disserProj/papka/krygi
+/PycharmProjects/disserProj/papka/NotRings
+
+PycharmProjects/disserProj/src/find_params.py
