@@ -11,7 +11,41 @@ MARKING_COLOR = np.array([0, 0, 255])
 top = np.array(MARKING_COLOR)
 bot = np.array(MARKING_COLOR)
 
-CONV_KERNEL = np.array([
+
+#можно
+#бол-во работ пытаются устранить в рамках процедуры восстановления из боковых проекциях
+#даже после такой процедуры могло что-то остаться
+#мы же пытаемся устранить с помощью постпроцессинга уже восстановлненных данных(пост процессинг реконструированного изображения)
+#подобный артефакт мог возникнуть как ошибка в боковых проекциях
+#возниклв как ошибки в боковых проекцич
+#нал ичие артефактов приводит к искажению последующих моделируемых по ним результатов
+
+
+#увеличить размер фильтра до 21
+CONV_KERNEL_SMALL = np.array([
+    [-1, -1, -1, -1, 2, 2, 2, 2, -1, -1, -1, -1],
+    [-1, -1, -1, -1, 2, 2, 2, 2, -1, -1, -1, -1],
+    [-1, -1, -1, -1, 2, 2, 2, 2, -1, -1, -1, -1],
+    [-1, -1, -1, -1, 2, 2, 2, 2, -1, -1, -1, -1],
+    [-1, -1, -1, -1, 2, 2, 2, 2, -1, -1, -1, -1],
+    [-1, -1, -1, -1, 2, 2, 2, 2, -1, -1, -1, -1],
+    [-1, -1, -1, -1, 2, 2, 2, 2, -1, -1, -1, -1],
+    [-1, -1, -1, -1, 2, 2, 2, 2, -1, -1, -1, -1],
+    [-1, -1, -1, -1, 2, 2, 2, 2, -1, -1, -1, -1],
+    [-1, -1, -1, -1, 2, 2, 2, 2, -1, -1, -1, -1],
+    [-1, -1, -1, -1, 2, 2, 2, 2, -1, -1, -1, -1]])
+
+CONV_KERNEL_BIG = np.array([
+    [-1, -1, -1, -1, 2, 2, 2, 2, -1, -1, -1, -1],
+    [-1, -1, -1, -1, 2, 2, 2, 2, -1, -1, -1, -1],
+    [-1, -1, -1, -1, 2, 2, 2, 2, -1, -1, -1, -1],
+    [-1, -1, -1, -1, 2, 2, 2, 2, -1, -1, -1, -1],
+    [-1, -1, -1, -1, 2, 2, 2, 2, -1, -1, -1, -1],
+    [-1, -1, -1, -1, 2, 2, 2, 2, -1, -1, -1, -1],
+    [-1, -1, -1, -1, 2, 2, 2, 2, -1, -1, -1, -1],
+    [-1, -1, -1, -1, 2, 2, 2, 2, -1, -1, -1, -1],
+    [-1, -1, -1, -1, 2, 2, 2, 2, -1, -1, -1, -1],
+    [-1, -1, -1, -1, 2, 2, 2, 2, -1, -1, -1, -1],
     [-1, -1, -1, -1, 2, 2, 2, 2, -1, -1, -1, -1],
     [-1, -1, -1, -1, 2, 2, 2, 2, -1, -1, -1, -1],
     [-1, -1, -1, -1, 2, 2, 2, 2, -1, -1, -1, -1],
@@ -76,7 +110,7 @@ def findRingsAccumulative(img, showInfo=0, thresh_bound = 2000, height_bound=0):
 
     # преобразуем в полярную систему координат
     polar = cv.linearPolar(contr_img, (contr_img.shape[1] // 2, contr_img.shape[0] // 2), contr_img.shape[1] // 2, cv.WARP_FILL_OUTLIERS)
-    convolved_polar = ndimage.convolve(np.float32(polar), CONV_KERNEL)
+    convolved_polar = ndimage.convolve(np.float32(polar), CONV_KERNEL_SMALL)
     abs_polar = np.abs(convolved_polar)
 
     if showInfo == 1:
@@ -144,7 +178,7 @@ def findRingsConnected(img, showInfo = 0, thresh_bound = 2000, height_bound=0):
 
     # преобразуем в полярную систему координат
     polar = cv.linearPolar(contr_img, (contr_img.shape[1] // 2, contr_img.shape[0] // 2), contr_img.shape[1] // 2, cv.WARP_FILL_OUTLIERS)
-    convolved_polar = ndimage.convolve(np.float32(polar), CONV_KERNEL)
+    convolved_polar = ndimage.convolve(np.float32(polar), CONV_KERNEL_BIG)
     abs_polar = np.abs(convolved_polar)
 
 
@@ -156,7 +190,7 @@ def findRingsConnected(img, showInfo = 0, thresh_bound = 2000, height_bound=0):
         drawGrayHist(contr_img, title='raw contrasted image histogram')
         drawGrayHistMasked(contr_img, title='raw contrasted image masked histogram')
         drawGrayHist(polar, title='polar image histogram')
-        drawGrayHist(abs_polar, int(np.max(abs_polar) + 1), title='abs_polar histogram')
+        #drawGrayHist(abs_polar, int(np.max(abs_polar) + 1), title='abs_polar histogram')
 
     convolved_polar = None
     # *********************************************************
