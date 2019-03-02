@@ -1,5 +1,4 @@
-from find_rings import *
-from test import *
+from metrics.test import *
 from skimage import morphology
 import os
 import numpy as np

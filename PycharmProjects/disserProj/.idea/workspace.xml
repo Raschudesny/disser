@@ -1,7 +1,19 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="b2da87b0-de6f-4060-8135-d805eac25e64" name="Default Changelist" comment="" />
+    <list default="true" id="b2da87b0-de6f-4060-8135-d805eac25e64" name="Default Changelist" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/results/AccumulativeArrayDetect.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/results/bin_result.png" beforeDir="false" afterPath="$PROJECT_DIR$/results/bin_result.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/results/morph_close.png" beforeDir="false" afterPath="$PROJECT_DIR$/results/morph_close.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/results/polar_result.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/results/result.png" beforeDir="false" afterPath="$PROJECT_DIR$/results/result.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/results/temp1.png" beforeDir="false" afterPath="$PROJECT_DIR$/results/temp1.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/find_params.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/find_params.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/find_rings.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/find_rings.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/region_wsie_metric.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/metrics/region_wsie_metric.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/metrics/test.py" afterDir="false" />
+    </list>
     <ignored path="$PROJECT_DIR$/venv/" />
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -81,36 +93,36 @@
     <session id="-1979968779">
       <usages-collector id="statistics.lifecycle.project">
         <counts>
-          <entry key="project.closed" value="12" />
+          <entry key="project.closed" value="14" />
           <entry key="project.open.time.1" value="1" />
           <entry key="project.open.time.4" value="2" />
           <entry key="project.open.time.5" value="2" />
           <entry key="project.open.time.6" value="5" />
           <entry key="project.open.time.7" value="1" />
-          <entry key="project.open.time.8" value="1" />
-          <entry key="project.opened" value="12" />
+          <entry key="project.open.time.8" value="3" />
+          <entry key="project.opened" value="14" />
         </counts>
       </usages-collector>
       <usages-collector id="statistics.file.extensions.edit">
         <counts>
           <entry key="dummy" value="1" />
-          <entry key="py" value="3826" />
+          <entry key="py" value="4412" />
         </counts>
       </usages-collector>
       <usages-collector id="statistics.file.types.edit">
         <counts>
           <entry key="PLAIN_TEXT" value="1" />
-          <entry key="Python" value="3826" />
+          <entry key="Python" value="4412" />
         </counts>
       </usages-collector>
       <usages-collector id="statistics.file.extensions.open">
         <counts>
-          <entry key="py" value="6" />
+          <entry key="py" value="11" />
         </counts>
       </usages-collector>
       <usages-collector id="statistics.file.types.open">
         <counts>
-          <entry key="Python" value="6" />
+          <entry key="Python" value="11" />
         </counts>
       </usages-collector>
     </session>
@@ -118,33 +130,10 @@
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
       <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/test.py">
+        <entry file="file://$PROJECT_DIR$/src/metrics/test.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="271">
-              <caret line="164" lean-forward="true" selection-start-line="164" selection-end-line="164" />
-              <folding>
-                <element signature="e#163#375#0" />
-                <element signature="e#416#2179#0" />
-                <element signature="e#2794#3397#0" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file:///usr/local/lib/python3.7/site-packages/sklearn/metrics/classification.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="-671">
-              <caret line="376" column="4" selection-start-line="376" selection-start-column="4" selection-end-line="376" selection-end-column="4" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$USER_HOME$/Library/Caches/PyCharmCE2018.2/python_stubs/-1199943126/cv2/cv2/__init__.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="72045">
-              <caret line="4816" column="41" selection-start-line="4816" selection-start-column="41" selection-end-line="4816" selection-end-column="41" />
+            <state relative-caret-position="231">
+              <caret line="82" lean-forward="true" selection-start-line="82" selection-end-line="82" />
             </state>
           </provider>
         </entry>
@@ -152,36 +141,37 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/find_rings.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="408">
-              <caret line="251" column="34" selection-start-line="251" selection-start-column="34" selection-end-line="251" selection-end-column="34" />
+            <state relative-caret-position="81">
+              <caret line="111" column="46" lean-forward="true" selection-start-line="111" selection-start-column="46" selection-end-line="111" selection-end-column="46" />
               <folding>
                 <element signature="e#0#18#0" expanded="true" />
-                <marker date="1547569835518" expanded="true" signature="3847:6370" ph="..." />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/find_params.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="433">
-              <caret line="94" selection-start-line="94" selection-end-line="94" />
-              <folding>
-                <element signature="e#0#24#0" expanded="true" />
-                <marker date="1550374843934" expanded="true" signature="1822:1825" ph="..." />
+                <marker date="1551385305719" expanded="true" signature="3764:3767" ph="..." />
               </folding>
             </state>
           </provider>
         </entry>
       </file>
       <file pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/src/region_wsie_metric.py">
+        <entry file="file://$PROJECT_DIR$/src/find_params.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="483">
-              <caret line="131" column="3" lean-forward="true" selection-start-line="131" selection-start-column="3" selection-end-line="131" selection-end-column="3" />
+            <state relative-caret-position="300">
+              <caret line="20" column="42" selection-start-line="20" selection-start-column="42" selection-end-line="20" selection-end-column="42" />
               <folding>
                 <element signature="e#0#24#0" expanded="true" />
+                <marker date="1551556258474" expanded="true" signature="158:232" ph="..." />
+                <marker date="1551556258474" expanded="true" signature="230:232" ph="..." />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/metrics/region_wsie_metric.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="1695">
+              <caret line="116" column="18" selection-start-line="116" selection-start-column="18" selection-end-line="116" selection-end-column="18" />
+              <folding>
+                <element signature="e#0#26#0" expanded="true" />
               </folding>
             </state>
           </provider>
@@ -212,6 +202,9 @@
       <find>matches_for_DIOU</find>
       <find>log_slices</find>
       <find>read_slices</find>
+      <find>idx</find>
+      <find>polar</find>
+      <find>results</find>
     </findStrings>
   </component>
   <component name="Git.Settings">
@@ -222,11 +215,12 @@
       <list>
         <option value="$PROJECT_DIR$/test.py" />
         <option value="$PROJECT_DIR$/src/new_file.py" />
-        <option value="$PROJECT_DIR$/src/find_rings.py" />
         <option value="$PROJECT_DIR$/src/refion_wsie_metric.py" />
         <option value="$PROJECT_DIR$/src/region_wsie_metric.py" />
-        <option value="$PROJECT_DIR$/src/find_params.py" />
         <option value="$PROJECT_DIR$/src/test.py" />
+        <option value="$PROJECT_DIR$/src/find_rings.py" />
+        <option value="$PROJECT_DIR$/src/metrics/test.py" />
+        <option value="$PROJECT_DIR$/src/find_params.py" />
       </list>
     </option>
   </component>
@@ -240,7 +234,6 @@
       <foldersAlwaysOnTop value="true" />
     </navigator>
     <panes>
-      <pane id="Scope" />
       <pane id="ProjectPane">
         <subPane>
           <expand>
@@ -253,10 +246,17 @@
               <item name="disserProj" type="462c0819:PsiDirectoryNode" />
               <item name="src" type="462c0819:PsiDirectoryNode" />
             </path>
+            <path>
+              <item name="disserProj" type="b2602c69:ProjectViewProjectNode" />
+              <item name="disserProj" type="462c0819:PsiDirectoryNode" />
+              <item name="src" type="462c0819:PsiDirectoryNode" />
+              <item name="metrics" type="462c0819:PsiDirectoryNode" />
+            </path>
           </expand>
           <select />
         </subPane>
       </pane>
+      <pane id="Scope" />
     </panes>
   </component>
   <component name="PropertiesComponent">
@@ -265,6 +265,7 @@
   </component>
   <component name="RecentsManager">
     <key name="MoveFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/src/metrics" />
       <recent name="$PROJECT_DIR$/src" />
     </key>
   </component>
@@ -280,7 +281,7 @@
       </list>
     </option>
   </component>
-  <component name="RunManager" selected="Python.test">
+  <component name="RunManager" selected="Python.find_params">
     <configuration name="find_params" type="PythonConfigurationType" factoryName="Python" temporary="true">
       <module name="disserProj" />
       <option name="INTERPRETER_OPTIONS" value="" />
@@ -314,7 +315,7 @@
       <option name="IS_MODULE_SDK" value="true" />
       <option name="ADD_CONTENT_ROOTS" value="true" />
       <option name="ADD_SOURCE_ROOTS" value="true" />
-      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/src/region_wsie_metric.py" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/src/metrics/region_wsie_metric.py" />
       <option name="PARAMETERS" value="" />
       <option name="SHOW_COMMAND_LINE" value="false" />
       <option name="EMULATE_TERMINAL" value="false" />
@@ -335,7 +336,7 @@
       <option name="IS_MODULE_SDK" value="true" />
       <option name="ADD_CONTENT_ROOTS" value="true" />
       <option name="ADD_SOURCE_ROOTS" value="true" />
-      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/src/test.py" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/src/metrics/test.py" />
       <option name="PARAMETERS" value="" />
       <option name="SHOW_COMMAND_LINE" value="false" />
       <option name="EMULATE_TERMINAL" value="false" />
@@ -351,9 +352,9 @@
     </list>
     <recent_temporary>
       <list>
+        <item itemvalue="Python.find_params" />
         <item itemvalue="Python.test" />
         <item itemvalue="Python.region_wsie_metric" />
-        <item itemvalue="Python.find_params" />
       </list>
     </recent_temporary>
   </component>
@@ -383,12 +384,12 @@
     <frame x="0" y="0" width="1440" height="900" extended-state="0" />
     <editor active="true" />
     <layout>
-      <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.17739628" />
+      <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.18168813" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
       <window_info id="Favorites" order="2" side_tool="true" />
       <window_info anchor="bottom" id="Message" order="0" />
       <window_info anchor="bottom" id="Find" order="1" weight="0.32891566" />
-      <window_info anchor="bottom" id="Run" order="2" sideWeight="0.49713877" visible="true" weight="0.21927711" />
+      <window_info anchor="bottom" id="Run" order="2" sideWeight="0.49713877" visible="true" weight="0.26746988" />
       <window_info anchor="bottom" id="Debug" order="3" weight="0.4" />
       <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
       <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
@@ -428,6 +429,47 @@
   <component name="VcsContentAnnotationSettings">
     <option name="myLimit" value="2678400000" />
   </component>
+  <component name="XDebuggerManager">
+    <breakpoint-manager>
+      <breakpoints>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/src/metrics/test.py</url>
+          <line>87</line>
+          <option name="timeStamp" value="2" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/src/find_params.py</url>
+          <line>26</line>
+          <option name="timeStamp" value="3" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/src/metrics/test.py</url>
+          <line>92</line>
+          <option name="timeStamp" value="4" />
+        </line-breakpoint>
+      </breakpoints>
+    </breakpoint-manager>
+    <watches-manager>
+      <configuration name="PythonConfigurationType">
+        <watch expression="bot" language="Python" />
+        <watch expression="top" language="Python" />
+      </configuration>
+    </watches-manager>
+  </component>
+  <component name="debuggerHistoryManager">
+    <expressions id="watch">
+      <expression>
+        <expression-string>top</expression-string>
+        <language-id>Python</language-id>
+        <evaluation-mode>EXPRESSION</evaluation-mode>
+      </expression>
+      <expression>
+        <expression-string>bot</expression-string>
+        <language-id>Python</language-id>
+        <evaluation-mode>EXPRESSION</evaluation-mode>
+      </expression>
+    </expressions>
+  </component>
   <component name="editorHistoryManager">
     <entry file="file://$PROJECT_DIR$/results/abs_polar.png">
       <provider selected="true" editor-type-id="images" />
@@ -460,60 +502,70 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$USER_HOME$/Library/Caches/PyCharmCE2018.2/python_stubs/-1199943126/cv2/cv2/__init__.py">
+    <entry file="file:///usr/local/lib/python3.7/site-packages/sklearn/metrics/classification.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="72045">
-          <caret line="4816" column="41" selection-start-line="4816" selection-start-column="41" selection-end-line="4816" selection-end-column="41" />
+        <state relative-caret-position="15">
+          <caret line="376" column="4" selection-start-line="376" selection-start-column="4" selection-end-line="376" selection-end-column="4" />
         </state>
       </provider>
     </entry>
-    <entry file="file:///usr/local/lib/python3.7/site-packages/sklearn/metrics/classification.py">
+    <entry file="file:///usr/local/Cellar/python/3.7.1/Frameworks/Python.framework/Versions/3.7/lib/python3.7/codecs.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-671">
-          <caret line="376" column="4" selection-start-line="376" selection-start-column="4" selection-end-line="376" selection-end-column="4" />
+        <state relative-caret-position="165">
+          <caret line="321" selection-start-line="321" selection-end-line="321" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/metrics/region_wsie_metric.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="1695">
+          <caret line="116" column="18" selection-start-line="116" selection-start-column="18" selection-end-line="116" selection-end-column="18" />
+          <folding>
+            <element signature="e#0#26#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file:///usr/local/Cellar/python/3.7.1/Frameworks/Python.framework/Versions/3.7/lib/python3.7/multiprocessing/pool.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-9652">
+          <caret line="155" column="8" selection-start-line="155" selection-start-column="8" selection-end-line="155" selection-end-column="8" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$USER_HOME$/Library/Caches/PyCharmCE2018.2/python_stubs/-1199943126/cv2/cv2/__init__.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-268">
+          <caret line="7668" column="4" selection-start-line="7668" selection-start-column="4" selection-end-line="7668" selection-end-column="4" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/metrics/test.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="231">
+          <caret line="82" lean-forward="true" selection-start-line="82" selection-end-line="82" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/find_rings.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="408">
-          <caret line="251" column="34" selection-start-line="251" selection-start-column="34" selection-end-line="251" selection-end-column="34" />
+        <state relative-caret-position="81">
+          <caret line="111" column="46" lean-forward="true" selection-start-line="111" selection-start-column="46" selection-end-line="111" selection-end-column="46" />
           <folding>
             <element signature="e#0#18#0" expanded="true" />
-            <marker date="1547569835518" expanded="true" signature="3847:6370" ph="..." />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/test.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="271">
-          <caret line="164" lean-forward="true" selection-start-line="164" selection-end-line="164" />
-          <folding>
-            <element signature="e#163#375#0" />
-            <element signature="e#416#2179#0" />
-            <element signature="e#2794#3397#0" />
+            <marker date="1551385305719" expanded="true" signature="3764:3767" ph="..." />
           </folding>
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/find_params.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="433">
-          <caret line="94" selection-start-line="94" selection-end-line="94" />
+        <state relative-caret-position="300">
+          <caret line="20" column="42" selection-start-line="20" selection-start-column="42" selection-end-line="20" selection-end-column="42" />
           <folding>
             <element signature="e#0#24#0" expanded="true" />
-            <marker date="1550374843934" expanded="true" signature="1822:1825" ph="..." />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/region_wsie_metric.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="483">
-          <caret line="131" column="3" lean-forward="true" selection-start-line="131" selection-start-column="3" selection-end-line="131" selection-end-column="3" />
-          <folding>
-            <element signature="e#0#24#0" expanded="true" />
+            <marker date="1551556258474" expanded="true" signature="158:232" ph="..." />
+            <marker date="1551556258474" expanded="true" signature="230:232" ph="..." />
           </folding>
         </state>
       </provider>

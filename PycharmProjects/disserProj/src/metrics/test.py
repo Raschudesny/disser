@@ -5,6 +5,7 @@ MARKING_COLOR = np.array([0, 0, 255])
 top = np.array(MARKING_COLOR)
 bot = np.array(MARKING_COLOR)
 
+
 def jaccard_metric(pred, truth):
     pred = pred.ravel()
     truth = truth.ravel()
@@ -14,6 +15,7 @@ def jaccard_metric(pred, truth):
 
     res = jaccard_similarity_score(truth1, pred1)
     return res
+
 
 def more_cool_metric(pred, truth):
     # CONNECTED COMPONENTS DETECTION
@@ -79,28 +81,26 @@ def more_cool_metric(pred, truth):
     print("Q= ", Q)
     return Q
 
-def caluclate(imagePath, truthPath, info, thresh = 2000, height = 2000):
+
+def calculate(imagePath, truthPath, info, thresh=2000, height=2000):
     img = cv.imread(imagePath, 0)
     truth = cv.imread(truthPath, 1)
     truth = cv.inRange(truth, bot, top)
 
-    res = findRingsConnected(img, showInfo = info, thresh_bound = thresh, height_bound = height)
-    pred = cv.inRange(res, bot, top)
+    pred = findRingsConnected(img, showInfo=info, thresh_bound=thresh, height_bound=height)
+
     if info == 1:
-        cv.imwrite("results/RAW.png", img)
-        cv.imwrite("results/temp.png", truth)
-        cv.imwrite("results/temp1.png", pred)
+        cv.imwrite("../results/RAW.png", img)
+        cv.imwrite("../results/temp.png", truth)
+        cv.imwrite("../results/temp1.png", pred)
 
     result = jaccard_metric(pred, truth)
 
-    more_cool_metric(pred, truth)
+    # more_cool_metric(pred, truth)
     return result
 
 
-
-
 def calc_params1(imgPath, truthPath):
-
     results = []
     max = max_i = max_j = 0
     for i in range(2000, 3500, 100):
@@ -109,7 +109,7 @@ def calc_params1(imgPath, truthPath):
             new_res = caluclate(imgPath, truthPath, 0, i, j)
             print("new result =  " + str(new_res) + " i =  " + str(i) + " j = " + str(j))
             temp_res.append(new_res)
-            if (new_res > max) :
+            if (new_res > max):
                 max = new_res
                 max_i = i
                 max_j = j
@@ -120,16 +120,7 @@ def calc_params1(imgPath, truthPath):
     return results
 
 
-
-
-
-
-
-#******* FUNCTION MAIN =) *************
-
-
-
-
+"""
 
 imagePath = "papka/AllRings/rings6.png"
 truthPath = "papka/AllRings/marked6.png"
@@ -137,20 +128,15 @@ truthPath = "papka/AllRings/marked6.png"
 
 start_time = time.time()
 
+#print("--- %s seconds ---" % (time.time() - start_time))
 
-#jaccard = caluclate(imagePath, truthPath,  1, 2892, 101)
-#print(jaccard)
-
-#jaccard = caluclate(imagePath, truthPath,  1, 2870, 95)
-#print(jaccard)
-
-#jaccard = caluclate(imagePath, truthPath,  1, 2700, 93)
-#print(jaccard)
 
 #jaccard = caluclate(imagePath, truthPath,  1, 6000, 120)
 
 #jaccard = caluclate(imagePath, truthPath,  0, 5700, 95)
 #print(jaccard)
+
+
 
 img1 = cv.imread("kek.png", 0)
 ret, img1 = cv.threshold(img1, thresh = 50, maxval = 255, type = cv.THRESH_BINARY)
@@ -158,14 +144,12 @@ img2 = cv.imread("lal.png", 0)
 ret, img2 = cv.threshold(img2, thresh = 50, maxval = 255, type = cv.THRESH_BINARY)
 
 
-img2 = cv.inRange(img2, -3, -3)
-img2[180:220, 0:20] = 255
-img2[0:20,180:220] = 255
-cv.imwrite("lal.png", img2)
-
 
 
 print("result = ", more_cool_metric(img2, img1))
+
+
+
 
 #res = calc_params1(imagePath, truthPath)
 
@@ -174,7 +158,4 @@ print("result = ", more_cool_metric(img2, img1))
 #    print('j = ' + str(r) + 'i = ' + str(count))
 #    count += 100
 
-print("--- %s seconds ---" % (time.time() - start_time))
-
-
-
+"""

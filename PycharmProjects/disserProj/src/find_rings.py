@@ -105,73 +105,6 @@ def drawGrayHistMasked(img, maxValue=256, title='Masked Gray Histogram'):
     plt.show()
 
 
-def findRingsAccumulative(img, showInfo=0, thresh_bound = 2000, height_bound=0):
-    contr_img = equal_contrast(img)
-
-    # преобразуем в полярную систему координат
-    polar = cv.linearPolar(contr_img, (contr_img.shape[1] // 2, contr_img.shape[0] // 2), contr_img.shape[1] // 2, cv.WARP_FILL_OUTLIERS)
-    convolved_polar = ndimage.convolve(np.float32(polar), CONV_KERNEL_SMALL)
-    abs_polar = np.abs(convolved_polar)
-
-    if showInfo == 1:
-        cv.imwrite("results/equaled.png", contr_img)
-        cv.imwrite("results/polar.png", polar)
-        cv.imwrite("results/convolved_polar.png", convolved_polar)
-        cv.imwrite("results/abs_polar.png", abs_polar)
-        drawGrayHist(contr_img, title='raw contrasted image histogram')
-        drawGrayHistMasked(contr_img, title='raw image masked histogram')
-        drawGrayHist(polar, title='polar image histogram')
-        drawGrayHist(abs_polar, int(np.max(abs_polar) + 1), title='abs_polar histogram')
-
-    convolved_polar = None
-    # *********************************************************
-
-    # THRESHOLDING
-    THRESH = thresh_bound
-    ret, bin_result = cv.threshold(abs_polar, THRESH, 255, cv.THRESH_BINARY)
-    bin_result = np.uint8(bin_result)
-
-    # MORPHOLOGY
-    rect_kernel = cv.getStructuringElement(cv.MORPH_RECT, (5, 5))
-    morph = cv.morphologyEx(bin_result, cv.MORPH_CLOSE, MORPH_KERNEL)
-    bin_result = np.uint8(morph)
-
-    if showInfo == 1:
-        cv.imwrite("results/bin_result.png", bin_result)
-        cv.imwrite("results/morph_close.png", morph)
-
-    morph = None
-    abs_polar = None
-    # *********************************************************
-
-    # polar bin_result
-    AccArray = (np.sum(bin_result, axis=0) / 255)
-    polar = cv.linearPolar(contr_img, (contr_img.shape[1] // 2, contr_img.shape[0] // 2), contr_img.shape[1] // 2, cv.WARP_FILL_OUTLIERS)
-    polar = cv.cvtColor(polar, cv.COLOR_GRAY2RGB)
-    # !!!!!!!!!!!!!!!!!!!!!!!!!!
-
-    for i in range(0, len(AccArray)):
-        if ((AccArray[i]) > height_bound):
-            pt1 = (i, 0)
-            pt2 = (i, polar.shape[0])
-            cv.line(polar, pt1, pt2, (0, 0, 255), 1)
-
-    # INVERSE
-    result = cv.linearPolar(polar, (polar.shape[1] // 2, polar.shape[0] // 2), polar.shape[1] // 2,
-                            cv.WARP_INVERSE_MAP + cv.WARP_FILL_OUTLIERS)
-
-    if showInfo == 1:
-        print('Accumulative array = ', AccArray)
-        cv.imwrite("results/polar_result.png", polar)
-        print(np.max(AccArray))
-        cv.imwrite("results/result.png", result)
-
-    polar = None
-    bin_result = None
-    AccArray = None
-    return result
-
-
 def findRingsConnected(img, showInfo = 0, thresh_bound = 2000, height_bound=0):
 
     contr_img = equal_contrast(img)
@@ -183,10 +116,10 @@ def findRingsConnected(img, showInfo = 0, thresh_bound = 2000, height_bound=0):
 
 
     if showInfo == 1:
-        cv.imwrite("results/equaled.png", contr_img)
-        cv.imwrite("results/polar.png", polar)
-        cv.imwrite("results/convolved_polar.png", convolved_polar)
-        cv.imwrite("results/abs_polar.png", abs_polar)
+        cv.imwrite("../results/equaled.png", contr_img)
+        cv.imwrite("../results/polar.png", polar)
+        cv.imwrite("../results/convolved_polar.png", convolved_polar)
+        cv.imwrite("../results/abs_polar.png", abs_polar)
         drawGrayHist(contr_img, title='raw contrasted image histogram')
         drawGrayHistMasked(contr_img, title='raw contrasted image masked histogram')
         drawGrayHist(polar, title='polar image histogram')
@@ -206,8 +139,8 @@ def findRingsConnected(img, showInfo = 0, thresh_bound = 2000, height_bound=0):
     bin_result = np.uint8(morph)
 
     if showInfo == 1:
-        cv.imwrite("results/bin_result.png", bin_result)
-        cv.imwrite("results/morph_close.png", morph)
+        cv.imwrite("../results/bin_result.png", bin_result)
+        cv.imwrite("../results/morph_close.png", morph)
 
     morph = None
     abs_polar = None
@@ -235,30 +168,22 @@ def findRingsConnected(img, showInfo = 0, thresh_bound = 2000, height_bound=0):
 
     # !!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
-
-
     heights = heights[1:]
     idx = np.where(heights >= height_bound)
     idx = idx[0] + 1
-    #print('idx = ' ,idx)
 
-    #print('labels = ', labels)
     outputImg = np.zeros(labels.shape)
     outputImg[np.isin(labels, idx)] = 255
 
 
-
-    polar = cv.linearPolar(img, (img.shape[1] // 2, img.shape[0] // 2), img.shape[1] // 2, cv.WARP_FILL_OUTLIERS)
-    polar = cv.cvtColor(polar, cv.COLOR_GRAY2RGB)
-
+    #TODO center
     outputImg[:, 0:400] = 0
-    polar[outputImg == 255] = (0, 0, 255)
+    result = outputImg
 
-    result = cv.linearPolar(polar, (polar.shape[1] // 2, polar.shape[0] // 2), polar.shape[1] // 2,
-                            cv.WARP_INVERSE_MAP + cv.WARP_FILL_OUTLIERS)
+    result = cv.linearPolar(result, (result.shape[1] // 2, result.shape[0] // 2), result.shape[1] // 2, cv.WARP_INVERSE_MAP + cv.WARP_FILL_OUTLIERS)
+
     if showInfo == 1:
-        cv.imwrite("results/polar_result.png", polar)
-        cv.imwrite("results/result.png", result)
+        cv.imwrite("../results/result.png", result)
 
     polar = None
     output = None
