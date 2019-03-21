@@ -14,17 +14,16 @@ MARKING_COLOR = np.array([0, 0, 255])
 top = np.array(MARKING_COLOR)
 bot = np.array(MARKING_COLOR)
 
+# можно
+# бол-во работ пытаются устранить в рамках процедуры восстановления из боковых проекциях
+# даже после такой процедуры могло что-то остаться
+# мы же пытаемся устранить с помощью постпроцессинга уже восстановлненных данных(пост процессинг реконструированного изображения)
+# подобный артефакт мог возникнуть как ошибка в боковых проекциях
+# возниклв как ошибки в боковых проекцич
+# нал ичие артефактов приводит к искажению последующих моделируемых по ним результатов
 
-#можно
-#бол-во работ пытаются устранить в рамках процедуры восстановления из боковых проекциях
-#даже после такой процедуры могло что-то остаться
-#мы же пытаемся устранить с помощью постпроцессинга уже восстановлненных данных(пост процессинг реконструированного изображения)
-#подобный артефакт мог возникнуть как ошибка в боковых проекциях
-#возниклв как ошибки в боковых проекцич
-#нал ичие артефактов приводит к искажению последующих моделируемых по ним результатов
 
-
-#увеличить размер фильтра до 21
+# увеличить размер фильтра до 21
 CONV_KERNEL_SMALL = np.array([
     [-1, -1, -1, -1, 2, 2, 2, 2, -1, -1, -1, -1],
     [-1, -1, -1, -1, 2, 2, 2, 2, -1, -1, -1, -1],
@@ -68,6 +67,20 @@ MORPH_KERNEL = np.uint8(np.array([
     [0, 1, 1, 1, 0],
     [0, 1, 1, 1, 0]]))
 
+MORPH_KERNEL_BIG = np.uint8(np.array([
+    [0, 0, 1, 0, 0],
+    [0, 0, 1, 0, 0],
+    [0, 0, 1, 0, 0],
+    [0, 0, 1, 0, 0],
+    [0, 0, 1, 0, 0],
+    [0, 0, 1, 0, 0],
+    [0, 0, 1, 0, 0],
+    [0, 0, 1, 0, 0],
+    [0, 0, 1, 0, 0],
+    [0, 0, 1, 0, 0],
+    [0, 0, 1, 0, 0],
+]))
+
 
 def equal_contrast(img):
     height = img.shape[0]
@@ -108,25 +121,25 @@ def drawGrayHistMasked(img, maxValue=256, title='Masked Gray Histogram'):
     plt.show()
 
 
-def findRingsConnected(img, showInfo = 0, thresh_bound = 2000, height_bound=0):
-
+def findRingsConnected(img, showInfo=0, thresh_bound=2000, height_bound=0, res_img_prefix=''):
     contr_img = equal_contrast(img)
 
     # преобразуем в полярную систему координат
-    polar = cv.linearPolar(contr_img, (contr_img.shape[1] // 2, contr_img.shape[0] // 2), contr_img.shape[1] // 2, cv.WARP_FILL_OUTLIERS)
+    polar = cv.linearPolar(contr_img, (contr_img.shape[1] // 2, contr_img.shape[0] // 2), contr_img.shape[1] // 2,
+                           cv.WARP_FILL_OUTLIERS)
+
     convolved_polar = ndimage.convolve(np.float32(polar), CONV_KERNEL_BIG)
     abs_polar = np.abs(convolved_polar)
 
-
     if showInfo == 1:
-        cv.imwrite("../results/equaled.png", contr_img)
-        cv.imwrite("../results/polar.png", polar)
-        cv.imwrite("../results/convolved_polar.png", convolved_polar)
-        cv.imwrite("../results/abs_polar.png", abs_polar)
+        cv.imwrite("../../results/" + res_img_prefix + "equaled.png", contr_img)
+        cv.imwrite("../../results/" + res_img_prefix + "polar.png", polar)
+        cv.imwrite("../../results/" + res_img_prefix + "convolved_polar.png", convolved_polar)
+        cv.imwrite("../../results/" + res_img_prefix + "abs_polar.png", abs_polar)
         drawGrayHist(contr_img, title='raw contrasted image histogram')
         drawGrayHistMasked(contr_img, title='raw contrasted image masked histogram')
         drawGrayHist(polar, title='polar image histogram')
-        #drawGrayHist(abs_polar, int(np.max(abs_polar) + 1), title='abs_polar histogram')
+        # drawGrayHist(abs_polar, int(np.max(abs_polar) + 1), title='abs_polar histogram')
 
     convolved_polar = None
     # *********************************************************
@@ -135,22 +148,25 @@ def findRingsConnected(img, showInfo = 0, thresh_bound = 2000, height_bound=0):
     THRESH = thresh_bound
     ret, bin_result = cv.threshold(abs_polar, THRESH, 255, cv.THRESH_BINARY)
     bin_result = np.uint8(bin_result)
+    if showInfo == 1:
+        cv.imwrite("../../results/" + res_img_prefix + "bin_result.png", bin_result)
 
     # MORPHOLOGY
-    rect_kernel = cv.getStructuringElement(cv.MORPH_RECT, (5, 5))
     morph = cv.morphologyEx(bin_result, cv.MORPH_CLOSE, MORPH_KERNEL)
     bin_result = np.uint8(morph)
 
     if showInfo == 1:
-        cv.imwrite("../results/bin_result.png", bin_result)
-        cv.imwrite("../results/morph_close.png", morph)
+        cv.imwrite("../../results/" + res_img_prefix + "morph_close1.png", morph)
 
     morph = None
     abs_polar = None
+
     # *********************************************************
 
-    # CONNECTED COMPONENTS DETECTION
+    # next rings detection without center
+    bin_result[:, 0: bin_result.shape[1] // 10] = 0
 
+    # CONNECTED COMPONENTS DETECTION
     connectivity = 8
     output = cv.connectedComponentsWithStats(bin_result, connectivity, cv.CV_32S)
 
@@ -178,15 +194,23 @@ def findRingsConnected(img, showInfo = 0, thresh_bound = 2000, height_bound=0):
     outputImg = np.zeros(labels.shape)
     outputImg[np.isin(labels, idx)] = 255
 
+    # MORPHOLOGY TRY AGAIN
 
-    #TODO center
-    outputImg[:, 0:400] = 0
+    morph = cv.morphologyEx(outputImg, cv.MORPH_CLOSE, MORPH_KERNEL_BIG)
+    if showInfo == 1:
+        cv.imwrite("../../results/" + res_img_prefix + "before_morph_close2.png", outputImg)
+        cv.imwrite("../../results/" + res_img_prefix + "morph_close2.png", morph)
+    outputImg = np.uint8(morph)
+
+    morph = None
+
+    # reverse linear polar transformation
     result = outputImg
-
-    result = cv.linearPolar(result, (result.shape[1] // 2, result.shape[0] // 2), result.shape[1] // 2, cv.WARP_INVERSE_MAP + cv.WARP_FILL_OUTLIERS)
+    result = cv.linearPolar(result, (result.shape[1] // 2, result.shape[0] // 2), result.shape[1] // 2,
+                            cv.WARP_INVERSE_MAP + cv.WARP_FILL_OUTLIERS)
 
     if showInfo == 1:
-        cv.imwrite("../results/result.png", result)
+        cv.imwrite("../../results/" + res_img_prefix + "result.png", result)
 
     polar = None
     output = None
@@ -198,21 +222,42 @@ def findRingsConnected(img, showInfo = 0, thresh_bound = 2000, height_bound=0):
     return result
 
 
-
-def calculate(imagePath, truthPath, info, thresh=2000, height=2000):
+def calculate(imagePath, truthPath=None, info=0, thresh=2000, height=2000, center_height=2000):
+    start_time1 = time.time()
     img = cv.imread(imagePath, 0)
-    truth = cv.imread(truthPath, 1)
-    truth = cv.inRange(truth, bot, top)
+    if truthPath != None:
+        truth = cv.imread(truthPath, 1)
+        truth = cv.inRange(truth, bot, top)
 
-    pred = findRingsConnected(img, showInfo=info, thresh_bound=thresh, height_bound=height)
+    pred = findRingsConnected(img, showInfo=info, thresh_bound=thresh, height_bound=height, res_img_prefix='big_')
+    end_time1 = time.time() - start_time1
+
+    # center rings finding
+    start_time2 = time.time()
+    height = img.shape[0]
+    width = img.shape[1]
+    center_img = img[height // 2 - 200: height // 2 + 200, width // 2 - 200: width // 2 + 200]
+    pred_center = findRingsConnected(center_img, showInfo=info, thresh_bound=thresh, height_bound=center_height,
+                                     res_img_prefix='small_')
+    pred[height // 2 - 200: height // 2 + 200, width // 2 - 200: width // 2 + 200] = pred_center
+    end_time2 = time.time() - start_time2
+
+    # result metrics finding
+    start_time3 = time.time()
+    if truthPath != None:
+        jac_res = jaccard_metric(pred, truth)
+        rwm_res = more_cool_metric(pred, truth)
+    else:
+        jac_res = -1
+        rwm_res = -1
+    end_time3 = time.time() - start_time3
 
     if info == 1:
-        cv.imwrite("../results/RAW.png", img)
-        cv.imwrite("../results/temp.png", truth)
-        cv.imwrite("../results/temp1.png", pred)
+        cv.imwrite("../../results/raw_input.png", img)
+        cv.imwrite("../../results/truth_image.png", truth)
+        cv.imwrite("../../results/predicted_image.png", pred)
+        print("--- Rings detection %s seconds ---" % end_time1)
+        print("--- Center rings detection  takes: %s seconds ---" % end_time2)
+        print("--- Metrics calculation takes: %s seconds ---" % end_time3)
 
-    jac_res = jaccard_metric(pred, truth)
-    rwm_res = more_cool_metric(pred, truth)
-
-    # more_cool_metric(pred, truth)
     return jac_res, rwm_res, pred

@@ -128,28 +128,3 @@ def temp_calculate(imagePath, truthPath, info, thresh=2000, height=2000):
     result4 = more_cool_metric_my(pred, truth)
 
     return result1, result2, result3, result4
-
-
-if __name__ == "__main__":
-    imagePath = "papka/AllRings/rings6.png"
-    truthPath = "papka/AllRings/marked6.png"
-
-    start_time = time.time()
-
-    res1, res2, res3, res4 = temp_calculate(imagePath, truthPath, 0, 5500, 100)
-
-    print(res1)
-    print(res2)
-    print(res3)
-    print(res4)
-
-    """
-    img1 = cv.imread("1.png", 0)
-    ret, img1 = cv.threshold(img1, thresh=50, maxval=255, type=cv.THRESH_BINARY)
-    img2 = cv.imread("2.png", 0)
-    ret, img2 = cv.threshold(img2, thresh=50, maxval=255, type=cv.THRESH_BINARY)
-    
-    print("result = ", more_cool_metric1(img1, img2))
-    """
-
-    print("--- %s seconds ---" % (time.time() - start_time))
