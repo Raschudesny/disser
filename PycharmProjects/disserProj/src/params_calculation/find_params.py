@@ -4,46 +4,55 @@ import multiprocessing
 
 
 def runnableCalculate(input):
-    return calculate(input[0], input[1], input[2], input[3], input[4])
+    JAC, RWM, PRED = calculate(input[0], input[1], input[2], input[3], input[4], input[5], input[6])
+    PRED = None
+    RWM = None
+    thresh = input[3]
+    height = input[4]
+    center_height = input[5]
+    return (thresh, height, center_height, JAC)
 
 
+def create_params(imgPath, truthPath, info, onlyJac):
 
-
-def calc_params1(imgPath, truthPath):
     results = []
-    max = max_i = max_j = 0
-    for i in range(2000, 3500, 100):
-        temp_res = []
-        for j in range(50, 150, 30):
-            new_res = calculate(imgPath, truthPath, 0, i, j)
-            print("new result =  " + str(new_res) + " i =  " + str(i) + " j = " + str(j))
-            temp_res.append(new_res)
-            if (new_res > max):
-                max = new_res
-                max_i = i
-                max_j = j
-        results.append(temp_res)
-        print("################")
 
-    print("max = " + str(max) + " i = " + str(max_i) + " j = " + str(max_j))
+    for i in range(6000, 6600, 100):
+        for j in range(180, 210, 10):
+            temp_res = [imgPath, truthPath, info]
+            #thresh
+            temp_res.append(i)
+            #height
+            temp_res.append(j)
+            #center_height
+            temp_res.append(40)
+            #only jac?
+            temp_res.append(True)
+            results.append(temp_res)
     return results
-
 
 
 # MAIN FUNCTION
 if __name__ == "__main__":
 
-    start_time = time.time()
-
+    global_start_time = time.time()
 
     imagePath = "../papka/AllRings/rings6.png"
     truthPath = "../papka/AllRings/marked6.png"
-    p = multiprocessing.Pool(processes = 2)
 
-    inputs = [[imagePath, truthPath, 0, 5000, 120],[imagePath, truthPath, 0, 5500, 120]]
+    p = multiprocessing.Pool(processes = 8)
+    
+    inputs = create_params(imagePath, truthPath, 0, True)
+    print(inputs)
+    print(len(inputs))
+    #imagePath, truthPath, info, thresh, height, center_height, OnlyJac
+    #inputs = [[imagePath, truthPath, 0, 5300, 110, 40, True],[imagePath, truthPath, 0, 5500, 100, 40, True]]
+
+
     res = p.map(runnableCalculate, inputs)
+    res = np.asarray(res)
     print(res)
+    np.savetxt('../find_params_res.txt', res, fmt=('%f', '%f', '%f', '%1 .12f'))
 
-    #print(caluclate(imagePath, truthPath, 0, 5000, 120))
-
-    print("--- %s seconds ---" % (time.time() - start_time))
+    #print(calculate(imagePath, truthPath, 0, 5500, 100, 40, True))
+    print("--- %s seconds ---" % (time.time() - global_start_time))

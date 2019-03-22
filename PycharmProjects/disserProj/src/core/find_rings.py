@@ -222,7 +222,7 @@ def findRingsConnected(img, showInfo=0, thresh_bound=2000, height_bound=0, res_i
     return result
 
 
-def calculate(imagePath, truthPath=None, info=0, thresh=2000, height=2000, center_height=2000):
+def calculate(imagePath, truthPath=None, info=0, thresh=2000, height=2000, center_height=2000, only_jaccard_metrics=False):
     start_time1 = time.time()
     img = cv.imread(imagePath, 0)
     if truthPath != None:
@@ -246,7 +246,10 @@ def calculate(imagePath, truthPath=None, info=0, thresh=2000, height=2000, cente
     start_time3 = time.time()
     if truthPath != None:
         jac_res = jaccard_metric(pred, truth)
-        rwm_res = more_cool_metric(pred, truth)
+        if only_jaccard_metrics == False:
+            rwm_res = more_cool_metric(pred, truth)
+        else:
+            rwm_res = (0, 0, 0)
     else:
         jac_res = -1
         rwm_res = -1
