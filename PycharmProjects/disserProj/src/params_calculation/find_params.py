@@ -12,13 +12,13 @@ def runnableCalculate(input):
     center_height = input[5]
     return (thresh, height, center_height, JAC)
 
-
+#imagePath, truthPath, info, thresh, height, center_height, OnlyJac
 def create_params(imgPath, truthPath, info, onlyJac):
 
     results = []
 
-    for i in range(6000, 6600, 100):
-        for j in range(180, 210, 10):
+    for i in range(2500, 6600, 100):
+        for j in range(40, 170, 10):
             temp_res = [imgPath, truthPath, info]
             #thresh
             temp_res.append(i)
@@ -37,22 +37,23 @@ if __name__ == "__main__":
 
     global_start_time = time.time()
 
-    imagePath = "../papka/AllRings/rings6.png"
-    truthPath = "../papka/AllRings/marked6.png"
+    imagePath = "../papka/AllRings/rings8.png"
+    truthPath = "../papka/AllRings/marked8.png"
 
     p = multiprocessing.Pool(processes = 8)
     
     inputs = create_params(imagePath, truthPath, 0, True)
     print(inputs)
     print(len(inputs))
-    #imagePath, truthPath, info, thresh, height, center_height, OnlyJac
-    #inputs = [[imagePath, truthPath, 0, 5300, 110, 40, True],[imagePath, truthPath, 0, 5500, 100, 40, True]]
+
 
 
     res = p.map(runnableCalculate, inputs)
     res = np.asarray(res)
-    print(res)
-    np.savetxt('../find_params_res.txt', res, fmt=('%f', '%f', '%f', '%1 .12f'))
+
+    with open('../results/params_results/jac_2500_6600_and_40_170/find_params_res_8_100_10.txt', 'w') as outfile:
+        for i in res:
+            outfile.write(np.array2string(i, formatter={'float': lambda x: '%0.8f' % x}) + '\n')
 
     #print(calculate(imagePath, truthPath, 0, 5500, 100, 40, True))
     print("--- %s seconds ---" % (time.time() - global_start_time))
