@@ -56,7 +56,7 @@ def jaccard_index(im3d1, im3d2):
 
 
 # region-wise metrics
-def region_metrics(im3d_gt, im3d_seg, threshold=0.4, debug_folder=None):
+def region_metrics(im3d_gt, im3d_seg, threshold=0.3, debug_folder=None):
 
     matches_for_DIOU = calc_matches_for_region_metrics(im3d_gt, im3d_seg, threshold, debug_folder=debug_folder)
     matches_for_GIOU = calc_matches_for_region_metrics(im3d_seg, im3d_gt, threshold, debug_folder=debug_folder)
@@ -67,7 +67,7 @@ def region_metrics(im3d_gt, im3d_seg, threshold=0.4, debug_folder=None):
     many2one = matches_for_GIOU[1]
     #print(one2one, one2many, many2one)
     #print(n_seg, n_gt)
-    weights = np.asarray((1, 0.75, 0.75))
+    weights = np.asarray((0.75, 1.0, 1.0))
     values = np.asarray((one2one, one2many, many2one))
     weighted_sum = (weights * values).sum()
     DR = weighted_sum / n_gt

@@ -23,9 +23,9 @@ def image_correction(imagePath, truthPath=None, info=0, thresh=5000, height=100,
 
 
 if __name__ == "__main__":
-    imagePath = "../../papka/AllRings/rings3.png"
-    truthPath = "../../papka/AllRings/marked3.png"
-    image_correction(imagePath, truthPath, info=1, thresh=5300, height=100, center_height=40)
+    imagePath = "../../papka/AllRings/rings6.png"
+    truthPath = "../../papka/AllRings/marked6.png"
+    image_correction(imagePath, truthPath, info=1, thresh=5500, height=100, center_height=40)
 
 
 

@@ -1,7 +1,10 @@
 import numpy as np
-from scipy import ndimage
-import cv2 as cv
 import math
+from scipy import ndimage
+from scipy import signal
+import cv2 as cv
+import os
+from os import walk
 from matplotlib import pyplot as plt
 from metrics.metrics_wrappers import jaccard_metric
 from metrics.metrics_wrappers import more_cool_metric
@@ -121,6 +124,52 @@ def drawGrayHistMasked(img, maxValue=256, title='Masked Gray Histogram'):
     plt.show()
 
 
+def read_image_slices(input_folder, input_name, start_index=0, step=1):
+    f = []
+    for (dirpath, dirnames, filenames) in walk(input_folder):
+        f.extend(filenames)
+        break
+    slices_num = len(f)
+    center_image_index = math.ceil(slices_num / 2)
+    slices = []
+    for i in f:
+        full_name = os.path.join(input_folder, i)
+        print(full_name)
+        slice = cv.imread(full_name, 0)
+        polar = cv.linearPolar(slice, (slice.shape[1] // 2, slice.shape[0] // 2), slice.shape[1] // 2,
+                               cv.WARP_FILL_OUTLIERS)
+        slice = None
+        slices.append(polar)
+
+    slices = np.dstack((slices[:]))
+    print(slices.shape)
+    #slices = np.stack(slices)
+    #print(slices)
+
+    kernels = np.repeat(CONV_KERNEL_BIG[None, :], slices_num, axis=0)
+    REALLY_BIG_KERNEL = np.dstack((kernels[:]))
+    print(REALLY_BIG_KERNEL.shape)
+    #REALLY_BIG_KERNEL = np.repeat(CONV_KERNEL_BIG[None, :], slices_num, axis=0)
+    #print(REALLY_BIG_KERNEL)
+
+
+
+    print("#######")
+    convolved_polar = signal.convolve(np.float32(slices), REALLY_BIG_KERNEL)
+    #convolved_polar = ndimage.convolve(np.float32(slices), REALLY_BIG_KERNEL)
+    print(convolved_polar.shape)
+
+    print("#######")
+    abs_polar = np.abs(convolved_polar)
+    print(abs_polar)
+
+    THRESH = 5000
+    ret, bin_result = cv.threshold(abs_polar, THRESH, 255, cv.THRESH_BINARY)
+    bin_result = np.uint8(bin_result)
+
+    cv.imwrite("../../result.png", bin_result)
+
+
 def findRingsConnected(img, showInfo=0, thresh_bound=2000, height_bound=0, res_img_prefix=''):
     contr_img = equal_contrast(img)
 
@@ -222,12 +271,16 @@ def findRingsConnected(img, showInfo=0, thresh_bound=2000, height_bound=0, res_i
     return result
 
 
-def calculate(imagePath, truthPath=None, info=0, thresh=2000, height=2000, center_height=2000, only_jaccard_metrics=False):
+def calculate(imagePath, truthPath=None, info=0, thresh=2000, height=2000, center_height=2000,
+              only_jaccard_metrics=False, is3d=False):
     start_time1 = time.time()
-    img = cv.imread(imagePath, 0)
+    if is3d == False:
+        img = cv.imread(imagePath, 0)
+
     if truthPath != None:
         truth = cv.imread(truthPath, 1)
         truth = cv.inRange(truth, bot, top)
+        #truth = cv.morphologyEx(truth, cv.MORPH_CLOSE, MORPH_KERNEL)
 
     pred = findRingsConnected(img, showInfo=info, thresh_bound=thresh, height_bound=height, res_img_prefix='big_')
     end_time1 = time.time() - start_time1
