@@ -12,6 +12,8 @@ from metrics.metrics_wrappers import more_cool_metric
 from sklearn.metrics import jaccard_similarity_score
 import time
 
+from core.convolution3d import make2DconvolutionWith3Dfilter
+
 MARKING_COLOR = np.array([0, 0, 255])
 
 top = np.array(MARKING_COLOR)
@@ -141,6 +143,7 @@ def read_image_slices(input_folder, input_name, start_index=0, step=1):
         slice = None
         slices.append(polar)
 
+    #slices = np.asarray(slices)
     slices = np.dstack((slices[:]))
     print(slices.shape)
     #slices = np.stack(slices)
@@ -152,12 +155,13 @@ def read_image_slices(input_folder, input_name, start_index=0, step=1):
     #REALLY_BIG_KERNEL = np.repeat(CONV_KERNEL_BIG[None, :], slices_num, axis=0)
     #print(REALLY_BIG_KERNEL)
 
-
-
+    convolved_polar = make2DconvolutionWith3Dfilter(np.float32(slices), REALLY_BIG_KERNEL)
+    """
     print("#######")
     convolved_polar = signal.convolve(np.float32(slices), REALLY_BIG_KERNEL)
     #convolved_polar = ndimage.convolve(np.float32(slices), REALLY_BIG_KERNEL)
     print(convolved_polar.shape)
+    """
 
     print("#######")
     abs_polar = np.abs(convolved_polar)
@@ -166,7 +170,6 @@ def read_image_slices(input_folder, input_name, start_index=0, step=1):
     THRESH = 5000
     ret, bin_result = cv.threshold(abs_polar, THRESH, 255, cv.THRESH_BINARY)
     bin_result = np.uint8(bin_result)
-
     cv.imwrite("../../result.png", bin_result)
 
 
