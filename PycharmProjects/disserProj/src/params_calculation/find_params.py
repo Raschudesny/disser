@@ -13,12 +13,10 @@ def runnableCalculate(input):
     return (thresh, height, center_height, JAC)
 
 #imagePath, truthPath, info, thresh, height, center_height, OnlyJac
-def create_params(imgPath, truthPath, info, onlyJac):
-
+def create_params(imgPath, truthPath, info, thresh_start, thresh_end, thresh_step, heigth_start, height_end, height_step):
     results = []
-
-    for i in range(2500, 6600, 100):
-        for j in range(40, 170, 10):
+    for i in range(heigth_start, height_end, height_step):
+        for j in range(thresh_start, thresh_end, thresh_step):
             temp_res = [imgPath, truthPath, info]
             #thresh
             temp_res.append(i)
@@ -26,34 +24,84 @@ def create_params(imgPath, truthPath, info, onlyJac):
             temp_res.append(j)
             #center_height
             temp_res.append(40)
-            #only jac?
+            #only jac
             temp_res.append(True)
             results.append(temp_res)
     return results
 
+def find_all_files_in_dir(directory_name):
+    files = []
+    for (dirpath, dirnames, filenames) in walk(directory_name):
+        files.extend(filenames)
+        break
+    files.sort()
+    return files
 
 # MAIN FUNCTION
 if __name__ == "__main__":
 
-    global_start_time = time.time()
-
-    imagePath = "../papka/AllRings/rings8.png"
-    truthPath = "../papka/AllRings/marked8.png"
-
-    p = multiprocessing.Pool(processes = 8)
-    
-    inputs = create_params(imagePath, truthPath, 0, True)
-    print(inputs)
-    print(len(inputs))
 
 
+    images_directory = "../../papka/AllRings/rings"
+    marked_directory = "../../papka/AllRings/marked"
+    images_files = find_all_files_in_dir(images_directory)
+    marked_files = find_all_files_in_dir(marked_directory)
+    images_files.sort()
+    marked_files.sort()
 
-    res = p.map(runnableCalculate, inputs)
-    res = np.asarray(res)
+    p = multiprocessing.Pool(processes=8)
 
-    with open('../results/params_results/jac_2500_6600_and_40_170/find_params_res_8_100_10.txt', 'w') as outfile:
-        for i in res:
-            outfile.write(np.array2string(i, formatter={'float': lambda x: '%0.8f' % x}) + '\n')
+    count = 0
+    for image in images_files:
+        global_start_time = time.time()
 
-    #print(calculate(imagePath, truthPath, 0, 5500, 100, 40, True))
-    print("--- %s seconds ---" % (time.time() - global_start_time))
+        image_full_name = os.path.join(images_directory, image)
+        truth_full_name = os.path.join(marked_directory, marked_files[count])
+        print("Current image is: ", image_full_name)
+        count += 1
+
+        center_thresh = 5000
+        center_height = 150
+
+        thresh_interval = 3000
+        height_interval = 200
+
+        while thresh_interval > 1:
+            thresh_step = int(thresh_interval / 10)
+            if  height_interval / 10 == 0:
+                height_step = 1
+            else:
+                height_step = int(height_interval / 10)
+
+            thresh_start = center_thresh - int(thresh_interval / 2)
+            thresh_end = center_thresh + int(thresh_interval / 2) + thresh_step
+            heigth_start = center_height - int(height_interval / 2)
+            height_end = center_height + int(height_interval / 2) + height_step
+            params = create_params(image_full_name, truth_full_name, 0,
+                                   thresh_start = thresh_start,
+                                   thresh_end = thresh_end,
+                                   thresh_step = thresh_step,
+                                   heigth_start= heigth_start,
+                                   height_end = height_end,
+                                   height_step = height_step)
+            print(params)
+            print(len(params))
+            print('*********')
+
+            res = p.map(runnableCalculate, params)
+            res = np.asarray(res)
+            with open('../results/params_results/' + image + '/' + "jac_" + thresh_start + '_' + thresh_end + '_and_'
+                      + heigth_start + "_"+ height_end +"_steps_"+ thresh_step + "_" + height_step +".txt",'w') as outfile:
+                for i in res:
+                    outfile.write(np.array2string(i, formatter={'float': lambda x: '%0.8f' % x}) + '\n')
+
+            max_res = np.amax(res)
+            indexes = np.where(res == max_res)
+            index = indexes[0][-1:][0]
+            center_thresh,center_height = params[index][3:5]
+            thresh_interval /= 10
+            height_interval /= 10
+            print("--- %s seconds ---" % (time.time() - global_start_time))
+
+
+
