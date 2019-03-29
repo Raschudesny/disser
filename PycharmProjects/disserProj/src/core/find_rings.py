@@ -155,7 +155,8 @@ def read_image_slices(input_folder, input_name, start_index=0, step=1):
     #REALLY_BIG_KERNEL = np.repeat(CONV_KERNEL_BIG[None, :], slices_num, axis=0)
     #print(REALLY_BIG_KERNEL)
 
-    convolved_polar = make2DconvolutionWith3Dfilter(np.float32(slices), REALLY_BIG_KERNEL)
+    #convolved_polar = make2DconvolutionWith3Dfilter(np.float32(slices), REALLY_BIG_KERNEL)
+    convolved_polar = None
     """
     print("#######")
     convolved_polar = signal.convolve(np.float32(slices), REALLY_BIG_KERNEL)

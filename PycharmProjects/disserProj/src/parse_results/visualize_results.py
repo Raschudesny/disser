@@ -28,6 +28,8 @@ def visualize_results(results_directory):
         values = []
         temp = []
         prevThresh = -1
+        thresh_set = set()
+        height_set = set()
         for str in x:
             floatArr = str.split()
             currentThresh = float(floatArr[0])
@@ -38,6 +40,8 @@ def visualize_results(results_directory):
             currentHeight = float(floatArr[1])
             currentCenter = float(floatArr[2])
             currentValue = float(floatArr[3])
+            thresh_set.add(currentThresh)
+            height_set.add(currentHeight)
             print(currentThresh, currentHeight, currentCenter, currentValue)
             temp.append(currentValue)
             prevThresh = currentThresh
@@ -46,8 +50,18 @@ def visualize_results(results_directory):
         print(values)
         print(values.shape)
 
-        ox = np.arange(40, 170, 10)
-        oy = np.arange(2500, 6600, 100)
+        min_thresh = min(thresh_set)
+        max_thresh = max(thresh_set)
+        thresh_set.remove(min_thresh)
+        thresh_step = min(thresh_set) - min_thresh
+
+        min_height = min(height_set)
+        max_height = max(height_set)
+        height_set.remove(min_height)
+        height_step = min(height_set) - min_height
+
+        ox = np.arange(min_height, max_height + height_step, height_step)
+        oy = np.arange(min_thresh, max_thresh + thresh_step, thresh_step)
 
         # cmap="YlGnBu_r"
         ax = sns.heatmap(values, xticklabels=ox, yticklabels=oy, linewidth=0.3)
@@ -55,9 +69,9 @@ def visualize_results(results_directory):
         plt.title(file)
         plt.show()
 
-    grid = sns.FacetGrid(data)
-    grid.map(sns.heatmap, data)
-    plt.show()
+    #grid = sns.FacetGrid(data)
+    #grid.map(sns.heatmap, data)
+    #plt.show()
     return
 
 if __name__ == "__main__":

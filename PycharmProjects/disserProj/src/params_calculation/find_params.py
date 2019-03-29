@@ -84,7 +84,7 @@ if __name__ == "__main__":
         p = Pool(processes=8)
         while thresh_interval > 1:
             thresh_step = int(thresh_interval / 10)
-            if  height_interval / 10 is 0:
+            if int(height_interval / 10) == 0:
                 height_step = 1
             else:
                 height_step = int(height_interval / 10)
@@ -115,11 +115,15 @@ if __name__ == "__main__":
                 for i in res:
                     outfile.write(np.array2string(i, formatter={'float': lambda x: '%0.8f' % x}) + '\n')
 
-            max_res = np.amax(res)
-            print("max = ", max_res)
-            indexes = np.where(res == max_res)
-            index = indexes[0][-1:][0]
-            center_thresh,center_height = params[index][3:5]
+            res[:] = res[::-1]
+            max_res = max(res, key = lambda item: item[3])
+            center_thresh = max_res[0]
+            center_height = max_res[1]
+            #max_res = np.amax(res)
+            #print("max = ", max_res)
+            #indexes = np.where(res == max_res)
+            #index = indexes[0][-1:][0]
+            #center_thresh,center_height = params[index][3:5]
             thresh_interval /= 10
             height_interval /= 10
             print("--- %s seconds ---" % (time.time() - global_start_time))
