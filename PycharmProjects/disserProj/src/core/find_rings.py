@@ -12,7 +12,7 @@ from metrics.metrics_wrappers import more_cool_metric
 from sklearn.metrics import jaccard_similarity_score
 import time
 
-from core.convolution3d import make2DconvolutionWith3Dfilter
+#from core.convolution3d import make2DconvolutionWith3Dfilter
 
 MARKING_COLOR = np.array([0, 0, 255])
 

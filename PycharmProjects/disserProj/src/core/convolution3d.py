@@ -1,7 +1,7 @@
-
-import tensorflow as tf
+#import tensorflow as tf
 import numpy as np
 
+"""
 def make2DconvolutionWith3Dfilter(images, filter):
     sess = tf.Session()
     #ones_3d = np.ones((5, 5, 5))
@@ -17,13 +17,13 @@ def make2DconvolutionWith3Dfilter(images, filter):
     filter_3d = tf.constant(weight_3d, dtype=tf.float32)
     print('filter_3d = \n', filter_3d)
 
-    in_width = int(in_3d.shape[0])
+    in_width = int(in_3d.shape[2])
     in_height = int(in_3d.shape[1])
-    in_depth = int(in_3d.shape[2])
+    in_depth = int(in_3d.shape[0])
 
-    filter_width = int(filter_3d.shape[0])
+    filter_width = int(filter_3d.shape[2])
     filter_height = int(filter_3d.shape[1])
-    filter_depth = int(filter_3d.shape[2])
+    filter_depth = int(filter_3d.shape[0])
 
     input_3d = tf.reshape(in_3d, [1, in_depth, in_height, in_width, 1])
     print('input_3d = \n', input_3d)
@@ -31,4 +31,7 @@ def make2DconvolutionWith3Dfilter(images, filter):
     print('kernel_3d = \n', kernel_3d)
 
     output_3d = tf.squeeze(tf.nn.conv3d(input_3d, kernel_3d, strides=strides_3d, padding='SAME'))
-    return sess.run(output_3d)
+    result = sess.run(output_3d)
+    print('RESULT = \n', result)
+    return result
+"""

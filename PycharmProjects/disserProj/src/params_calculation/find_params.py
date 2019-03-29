@@ -1,6 +1,5 @@
 from core.find_rings import *
-
-import multiprocessing
+from multiprocessing import Pool
 
 
 def runnableCalculate(input):
@@ -15,8 +14,8 @@ def runnableCalculate(input):
 #imagePath, truthPath, info, thresh, height, center_height, OnlyJac
 def create_params(imgPath, truthPath, info, thresh_start, thresh_end, thresh_step, heigth_start, height_end, height_step):
     results = []
-    for i in range(heigth_start, height_end, height_step):
-        for j in range(thresh_start, thresh_end, thresh_step):
+    for i in range(thresh_start, thresh_end, thresh_step):
+        for j in range(heigth_start, height_end, height_step):
             temp_res = [imgPath, truthPath, info]
             #thresh
             temp_res.append(i)
@@ -40,16 +39,32 @@ def find_all_files_in_dir(directory_name):
 # MAIN FUNCTION
 if __name__ == "__main__":
 
-
-
-    images_directory = "../../papka/AllRings/rings"
-    marked_directory = "../../papka/AllRings/marked"
+    images_directory = "../papka/AllRings/rings"
+    marked_directory = "../papka/AllRings/marked"
     images_files = find_all_files_in_dir(images_directory)
     marked_files = find_all_files_in_dir(marked_directory)
     images_files.sort()
     marked_files.sort()
+    print(images_files)
+    print(marked_files)
 
-    p = multiprocessing.Pool(processes=8)
+    """
+    params = create_params('../../papka/AllRings/rings/rings1.png',
+                           '../../papka/AllRings/marked/marked1.png',
+                           0,
+                           thresh_start=5000,
+                           thresh_end=5200,
+                           thresh_step=100,
+                           heigth_start=90,
+                           height_end=120,
+                           height_step=10)
+    print(params)
+    print(len(params))
+    #print(runnableCalculate(['../papka/AllRings/rings/rings1.png', '../papka/AllRings/marked/marked1.png', 0, 5000, 90, 40, True]))
+    p = Pool(processes=6)
+    res = p.map(runnableCalculate, params)
+    print(res)
+    """
 
     count = 0
     for image in images_files:
@@ -66,9 +81,10 @@ if __name__ == "__main__":
         thresh_interval = 3000
         height_interval = 200
 
+        p = Pool(processes=8)
         while thresh_interval > 1:
             thresh_step = int(thresh_interval / 10)
-            if  height_interval / 10 == 0:
+            if  height_interval / 10 is 0:
                 height_step = 1
             else:
                 height_step = int(height_interval / 10)
@@ -89,19 +105,25 @@ if __name__ == "__main__":
             print('*********')
 
             res = p.map(runnableCalculate, params)
+            print("iteration :" + str(center_thresh) + "passed")
+
             res = np.asarray(res)
-            with open('../results/params_results/' + image + '/' + "jac_" + thresh_start + '_' + thresh_end + '_and_'
-                      + heigth_start + "_"+ height_end +"_steps_"+ thresh_step + "_" + height_step +".txt",'w') as outfile:
+            ind = image.find('.')
+            image_str = image[0:ind]
+            with open('../results/params_results/' + image_str + '_' + "jac_" + str(thresh_start) + '_' + str(thresh_end) + '_and_'
+                      + str(heigth_start) + "_" + str(height_end) + "_steps_" + str(thresh_step) + "_" + str(height_step) + ".txt",'w') as outfile:
                 for i in res:
                     outfile.write(np.array2string(i, formatter={'float': lambda x: '%0.8f' % x}) + '\n')
 
             max_res = np.amax(res)
+            print("max = ", max_res)
             indexes = np.where(res == max_res)
             index = indexes[0][-1:][0]
             center_thresh,center_height = params[index][3:5]
             thresh_interval /= 10
             height_interval /= 10
             print("--- %s seconds ---" % (time.time() - global_start_time))
+
 
 
 
