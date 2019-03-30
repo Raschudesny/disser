@@ -14,8 +14,8 @@ def runnableCalculate(input):
 #imagePath, truthPath, info, thresh, height, center_height, OnlyJac
 def create_params(imgPath, truthPath, info, thresh_start, thresh_end, thresh_step, heigth_start, height_end, height_step):
     results = []
-    for i in range(thresh_start, thresh_end, thresh_step):
-        for j in range(heigth_start, height_end, height_step):
+    for i in reversed(range(thresh_start, thresh_end, thresh_step)):
+        for j in reversed(range(heigth_start, height_end, height_step)):
             temp_res = [imgPath, truthPath, info]
             #thresh
             temp_res.append(i)
@@ -82,24 +82,31 @@ if __name__ == "__main__":
         height_interval = 200
 
         p = Pool(processes=8)
-        while thresh_interval > 1:
-            thresh_step = int(thresh_interval / 10)
+        while thresh_interval != 0:
+            if int(thresh_interval / 10) == 0 :
+                thresh_step = 1
+            else:
+                thresh_step = int(thresh_interval / 10)
+
             if int(height_interval / 10) == 0:
-                height_step = 1
+                height_step = int(1)
             else:
                 height_step = int(height_interval / 10)
+
+            print("thresh step = ", thresh_step)
+            print("height step = ", height_step)
 
             thresh_start = center_thresh - int(thresh_interval / 2)
             thresh_end = center_thresh + int(thresh_interval / 2) + thresh_step
             heigth_start = center_height - int(height_interval / 2)
             height_end = center_height + int(height_interval / 2) + height_step
             params = create_params(image_full_name, truth_full_name, 0,
-                                   thresh_start = thresh_start,
-                                   thresh_end = thresh_end,
-                                   thresh_step = thresh_step,
-                                   heigth_start= heigth_start,
-                                   height_end = height_end,
-                                   height_step = height_step)
+                                   thresh_start = int(thresh_start),
+                                   thresh_end = int(thresh_end),
+                                   thresh_step = int(thresh_step),
+                                   heigth_start= int(heigth_start),
+                                   height_end = int(height_end),
+                                   height_step = int(height_step))
             print(params)
             print(len(params))
             print('*********')
@@ -115,17 +122,21 @@ if __name__ == "__main__":
                 for i in res:
                     outfile.write(np.array2string(i, formatter={'float': lambda x: '%0.8f' % x}) + '\n')
 
-            res[:] = res[::-1]
+            #res[:] = res[::-1]
             max_res = max(res, key = lambda item: item[3])
             center_thresh = max_res[0]
             center_height = max_res[1]
-            #max_res = np.amax(res)
-            #print("max = ", max_res)
-            #indexes = np.where(res == max_res)
-            #index = indexes[0][-1:][0]
-            #center_thresh,center_height = params[index][3:5]
-            thresh_interval /= 10
-            height_interval /= 10
+            print("new center_thresh =", center_thresh)
+            print("new center_height =", center_height)
+
+            thresh_interval = int(thresh_interval / 10)
+            if int(height_interval / 10) == 0:
+                height_interval = 2
+            else:
+                height_interval = int(height_interval / 10)
+
+            print("new thresh_interval = ", thresh_interval)
+            print("new height_interval = ", height_interval)
             print("--- %s seconds ---" % (time.time() - global_start_time))
 
 
