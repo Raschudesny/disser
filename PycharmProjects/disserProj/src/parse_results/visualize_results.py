@@ -8,7 +8,7 @@ from core.find_rings import *
 
 
 
-def visualize_results(results_directory):
+def visualize_results(results_directory, reverse=True):
     files = []
     for (dirpath, dirnames, filenames) in walk(results_directory):
         files.extend(filenames)
@@ -34,6 +34,8 @@ def visualize_results(results_directory):
             floatArr = str.split()
             currentThresh = float(floatArr[0])
             if currentThresh != prevThresh and prevThresh != -1:
+                if reverse == True:
+                    temp = list(reversed(temp))
                 values.append(temp)
                 temp = []
 
@@ -46,6 +48,8 @@ def visualize_results(results_directory):
             temp.append(currentValue)
             prevThresh = currentThresh
 
+        if reverse == True:
+            values = list(reversed(values))
         values = np.asarray(values)
         print(values)
         print(values.shape)
@@ -75,4 +79,5 @@ def visualize_results(results_directory):
     return
 
 if __name__ == "__main__":
-    visualize_results("../../results/params_results/jac_2500_6600_and_40_170")
+    visualize_results("../../results/params_results/jac_2500_6600_and_40_170", reverse = False)
+    #visualize_results("../../results/params_results/rings1", reverse=True)

@@ -54,9 +54,13 @@ def jaccard_index(im3d1, im3d2):
     sum = np.logical_or(im3d1, im3d2).sum()
     return product / sum
 
+def hm(g, im3d1, im3d2):
+    product = np.logical_and(g, im3d1).sum()
+    sum = np.logical_or(im3d1, im3d2).sum()
+    return product / sum
 
 # region-wise metrics
-def region_metrics(im3d_gt, im3d_seg, threshold=0.3, debug_folder=None):
+def region_metrics(im3d_gt, im3d_seg, threshold=0.4, debug_folder=None):
 
     matches_for_DIOU = calc_matches_for_region_metrics(im3d_gt, im3d_seg, threshold, debug_folder=debug_folder)
     matches_for_GIOU = calc_matches_for_region_metrics(im3d_seg, im3d_gt, threshold, debug_folder=debug_folder)
@@ -67,7 +71,7 @@ def region_metrics(im3d_gt, im3d_seg, threshold=0.3, debug_folder=None):
     many2one = matches_for_GIOU[1]
     #print(one2one, one2many, many2one)
     #print(n_seg, n_gt)
-    weights = np.asarray((0.75, 1.0, 1.0))
+    weights = np.asarray((1.0, 0.75, 0.75))
     values = np.asarray((one2one, one2many, many2one))
     weighted_sum = (weights * values).sum()
     DR = weighted_sum / n_gt
@@ -92,9 +96,11 @@ def calc_matches_for_region_metrics(im3d_gt, im3d_seg, threshold, debug_folder=N
         im3d_gt_region = np.zeros(im3d_seg.shape, dtype=np.uint8)
         for partlabel in partlabels[1:]:
             im3d_gt_region = np.logical_or(im3d_gt_region, im3d_gt_labeled == partlabel)
+        #im3d_gt_region[np.isin(im3d_gt_labeled, partlabels[1:])]
 
         # calc index
-        index = jaccard_index(im3d_seg_region, im3d_gt_region)
+        #index = jaccard_index(im3d_seg_region, im3d_gt_region)
+        index = hm(im3d_seg_labeled, im3d_seg_region, im3d_gt_region)
         im3d_regionsproduct_labeled, k = morphology.label(im3d_regionsproduct, return_num=True)
         if index >= threshold:
             if k == 1:

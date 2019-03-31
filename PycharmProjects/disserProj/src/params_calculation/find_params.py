@@ -11,22 +11,25 @@ def runnableCalculate(input):
     center_height = input[5]
     return (thresh, height, center_height, JAC)
 
-#imagePath, truthPath, info, thresh, height, center_height, OnlyJac
-def create_params(imgPath, truthPath, info, thresh_start, thresh_end, thresh_step, heigth_start, height_end, height_step):
+
+# imagePath, truthPath, info, thresh, height, center_height, OnlyJac
+def create_params(imgPath, truthPath, info, thresh_start, thresh_end, thresh_step, heigth_start, height_end,
+                  height_step):
     results = []
     for i in reversed(range(thresh_start, thresh_end, thresh_step)):
         for j in reversed(range(heigth_start, height_end, height_step)):
             temp_res = [imgPath, truthPath, info]
-            #thresh
+            # thresh
             temp_res.append(i)
-            #height
+            # height
             temp_res.append(j)
-            #center_height
+            # center_height
             temp_res.append(40)
-            #only jac
+            # only jac
             temp_res.append(True)
             results.append(temp_res)
     return results
+
 
 def find_all_files_in_dir(directory_name):
     files = []
@@ -36,36 +39,8 @@ def find_all_files_in_dir(directory_name):
     files.sort()
     return files
 
-# MAIN FUNCTION
-if __name__ == "__main__":
 
-    images_directory = "../papka/AllRings/rings"
-    marked_directory = "../papka/AllRings/marked"
-    images_files = find_all_files_in_dir(images_directory)
-    marked_files = find_all_files_in_dir(marked_directory)
-    images_files.sort()
-    marked_files.sort()
-    print(images_files)
-    print(marked_files)
-
-    """
-    params = create_params('../../papka/AllRings/rings/rings1.png',
-                           '../../papka/AllRings/marked/marked1.png',
-                           0,
-                           thresh_start=5000,
-                           thresh_end=5200,
-                           thresh_step=100,
-                           heigth_start=90,
-                           height_end=120,
-                           height_step=10)
-    print(params)
-    print(len(params))
-    #print(runnableCalculate(['../papka/AllRings/rings/rings1.png', '../papka/AllRings/marked/marked1.png', 0, 5000, 90, 40, True]))
-    p = Pool(processes=6)
-    res = p.map(runnableCalculate, params)
-    print(res)
-    """
-
+def find_params_separately(images_directory, marked_directory, images_files, marked_files):
     count = 0
     for image in images_files:
         global_start_time = time.time()
@@ -83,7 +58,7 @@ if __name__ == "__main__":
 
         p = Pool(processes=8)
         while thresh_interval != 0:
-            if int(thresh_interval / 10) == 0 :
+            if int(thresh_interval / 10) == 0:
                 thresh_step = 1
             else:
                 thresh_step = int(thresh_interval / 10)
@@ -101,12 +76,12 @@ if __name__ == "__main__":
             heigth_start = center_height - int(height_interval / 2)
             height_end = center_height + int(height_interval / 2) + height_step
             params = create_params(image_full_name, truth_full_name, 0,
-                                   thresh_start = int(thresh_start),
-                                   thresh_end = int(thresh_end),
-                                   thresh_step = int(thresh_step),
-                                   heigth_start= int(heigth_start),
-                                   height_end = int(height_end),
-                                   height_step = int(height_step))
+                                   thresh_start=int(thresh_start),
+                                   thresh_end=int(thresh_end),
+                                   thresh_step=int(thresh_step),
+                                   heigth_start=int(heigth_start),
+                                   height_end=int(height_end),
+                                   height_step=int(height_step))
             print(params)
             print(len(params))
             print('*********')
@@ -117,13 +92,15 @@ if __name__ == "__main__":
             res = np.asarray(res)
             ind = image.find('.')
             image_str = image[0:ind]
-            with open('../results/params_results/' + image_str + '_' + "jac_" + str(thresh_start) + '_' + str(thresh_end) + '_and_'
-                      + str(heigth_start) + "_" + str(height_end) + "_steps_" + str(thresh_step) + "_" + str(height_step) + ".txt",'w') as outfile:
+            with open('../results/params_results/' + image_str + '_' + "jac_" + str(thresh_start) + '_' + str(
+                    thresh_end) + '_and_'
+                      + str(heigth_start) + "_" + str(height_end) + "_steps_" + str(thresh_step) + "_" + str(
+                height_step) + ".txt", 'w') as outfile:
                 for i in res:
                     outfile.write(np.array2string(i, formatter={'float': lambda x: '%0.8f' % x}) + '\n')
 
-            #res[:] = res[::-1]
-            max_res = max(res, key = lambda item: item[3])
+            # res[:] = res[::-1]
+            max_res = max(res, key=lambda item: item[3])
             center_thresh = max_res[0]
             center_height = max_res[1]
             print("new center_thresh =", center_thresh)
@@ -140,5 +117,98 @@ if __name__ == "__main__":
             print("--- %s seconds ---" % (time.time() - global_start_time))
 
 
+def find_params_together(images_directory, marked_directory, images_files, marked_files):
+    global_start_time = time.time()
+    center_thresh = 5000
+    center_height = 150
+
+    thresh_interval = 3000
+    height_interval = 200
+
+    p = Pool(processes=8)
+    while thresh_interval != 0:
+        if int(thresh_interval / 10) == 0:
+            thresh_step = 1
+        else:
+            thresh_step = int(thresh_interval / 10)
+
+        if int(height_interval / 10) == 0:
+            height_step = int(1)
+        else:
+            height_step = int(height_interval / 10)
+
+        print("thresh step = ", thresh_step)
+        print("height step = ", height_step)
+
+        thresh_start = center_thresh - int(thresh_interval / 2)
+        thresh_end = center_thresh + int(thresh_interval / 2) + thresh_step
+        heigth_start = center_height - int(height_interval / 2)
+        height_end = center_height + int(height_interval / 2) + height_step
+
+        images_counter = 0
+        sum = 0
+        for image in images_files:
+            image_full_name = os.path.join(images_directory, image)
+            truth_full_name = os.path.join(marked_directory, marked_files[images_counter])
+            print("Current image is: ", image_full_name)
+            images_counter += 1
+
+            params = create_params(image_full_name, truth_full_name, 0,
+                                   thresh_start=int(thresh_start),
+                                   thresh_end=int(thresh_end),
+                                   thresh_step=int(thresh_step),
+                                   heigth_start=int(heigth_start),
+                                   height_end=int(height_end),
+                                   height_step=int(height_step))
+            print(params)
+            print(len(params))
+            print('*********')
+
+            res = p.map(runnableCalculate, params)
+            res = np.asarray(res)
+
+            if images_counter == 0:
+                sum = res
+            else:
+                sum[:, 3] += res[:, 3]
+
+            print("iteration with image: " + str(image) + " center: " + str(center_thresh) + " has passed")
 
 
+        with open('../results/params_results/' + 'overall' + '_' + "jac_" + str(thresh_start) + '_' + str(
+                thresh_end) + '_and_'
+                  + str(heigth_start) + "_" + str(height_end) + "_steps_" + str(thresh_step) + "_" + str(
+            height_step) + ".txt", 'w') as outfile:
+            for i in res:
+                outfile.write(np.array2string(i, formatter={'float': lambda x: '%0.8f' % x}) + '\n')
+
+        max_res = max(sum, key=lambda item: item[3])
+        center_thresh = max_res[0]
+        center_height = max_res[1]
+        print("new center_thresh =", center_thresh)
+        print("new center_height =", center_height)
+
+        thresh_interval = int(thresh_interval / 10)
+        if int(height_interval / 10) == 0:
+            height_interval = 2
+        else:
+            height_interval = int(height_interval / 10)
+
+        print("new thresh_interval = ", thresh_interval)
+        print("new height_interval = ", height_interval)
+
+    print("--- %s seconds ---" % (time.time() - global_start_time))
+    return
+
+#MAIN FUNCTION
+if __name__ == "__main__":
+    images_directory = "../papka/AllRings/rings"
+    marked_directory = "../papka/AllRings/marked"
+    images_files = find_all_files_in_dir(images_directory)
+    marked_files = find_all_files_in_dir(marked_directory)
+    images_files.sort()
+    marked_files.sort()
+    print(images_files)
+    print(marked_files)
+    #find_params_separately(images_directory, marked_directory, images_files, marked_files)
+    find_params_together(images_directory, marked_directory, images_files, marked_files)
