@@ -125,7 +125,7 @@ def find_params_together(images_directory, marked_directory, images_files, marke
     thresh_interval = 3000
     height_interval = 200
 
-    p = Pool(processes=8)
+    p = Pool(processes=12)
     while thresh_interval != 0:
         if int(thresh_interval / 10) == 0:
             thresh_step = 1
@@ -167,19 +167,19 @@ def find_params_together(images_directory, marked_directory, images_files, marke
             res = p.map(runnableCalculate, params)
             res = np.asarray(res)
 
-            if images_counter == 0:
+            if images_counter == 1:
                 sum = res
             else:
                 sum[:, 3] += res[:, 3]
 
             print("iteration with image: " + str(image) + " center: " + str(center_thresh) + " has passed")
-
+            #print("sum = ", sum)
 
         with open('../results/params_results/' + 'overall' + '_' + "jac_" + str(thresh_start) + '_' + str(
                 thresh_end) + '_and_'
                   + str(heigth_start) + "_" + str(height_end) + "_steps_" + str(thresh_step) + "_" + str(
             height_step) + ".txt", 'w') as outfile:
-            for i in res:
+            for i in sum:
                 outfile.write(np.array2string(i, formatter={'float': lambda x: '%0.8f' % x}) + '\n')
 
         max_res = max(sum, key=lambda item: item[3])
