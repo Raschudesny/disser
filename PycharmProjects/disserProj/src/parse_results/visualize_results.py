@@ -44,9 +44,14 @@ def visualize_results(results_directory, reverse=True):
             currentValue = float(floatArr[3])
             thresh_set.add(currentThresh)
             height_set.add(currentHeight)
-            print(currentThresh, currentHeight, currentCenter, currentValue)
+            #print(currentThresh, currentHeight, currentCenter, currentValue)
             temp.append(currentValue)
             prevThresh = currentThresh
+
+        if reverse == True:
+            temp = list(reversed(temp))
+        values.append(temp)
+        temp = []
 
         if reverse == True:
             values = list(reversed(values))
@@ -79,5 +84,5 @@ def visualize_results(results_directory, reverse=True):
     return
 
 if __name__ == "__main__":
-    visualize_results("../../results/params_results/jac_2500_6600_and_40_170", reverse = False)
-    #visualize_results("../../results/params_results/rings1", reverse=True)
+    #visualize_results("../../results/params_results/jac_2500_6600_and_40_170", reverse = False)
+    visualize_results("../../results/params_results/all_rings", reverse=True)
