@@ -12,7 +12,7 @@ from metrics.metrics_wrappers import more_cool_metric
 from sklearn.metrics import jaccard_similarity_score
 import time
 
-#from core.convolution3d import make2DconvolutionWith3Dfilter
+# from core.convolution3d import make2DconvolutionWith3Dfilter
 
 MARKING_COLOR = np.array([0, 0, 255])
 
@@ -106,6 +106,8 @@ def drawGrayHist(img, maxValue=256, title='Gray Histogram'):
     plt.hist(img.ravel(), maxValue, [0, maxValue])
     plt.xlim([0, maxValue])
     plt.grid()
+    plt.xlabel("Значение яркости пикселя")
+    plt.ylabel("Кол-во пикселей")
     plt.show()
     return
 
@@ -116,7 +118,10 @@ def drawGrayHistMasked(img, maxValue=256, title='Masked Gray Histogram'):
     width = img.shape[1]
     mask = np.zeros(img.shape[:2], np.uint8)
     mask[int(height / 4): int(height * 3 / 4), int(width / 4): int(width * 3 / 4)] = 255
+    drawGrayHist(img=img[int(height / 4): int(height * 3 / 4), int(width / 4): int(width * 3 / 4)], maxValue=maxValue,
+                 title=title)
     # masked_img = cv.bitwise_and(img, img, mask = mask)
+    """
     hist_mask = cv.calcHist([img], [0], mask, [maxValue], [0, maxValue])
     plt.figure(figsize=(10, 5))
     plt.title(title)
@@ -124,6 +129,7 @@ def drawGrayHistMasked(img, maxValue=256, title='Masked Gray Histogram'):
     plt.xlim([0, maxValue])
     plt.grid()
     plt.show()
+    """
 
 
 def read_image_slices(input_folder, input_name, start_index=0, step=1):
@@ -143,19 +149,19 @@ def read_image_slices(input_folder, input_name, start_index=0, step=1):
         slice = None
         slices.append(polar)
 
-    #slices = np.asarray(slices)
+    # slices = np.asarray(slices)
     slices = np.dstack((slices[:]))
     print(slices.shape)
-    #slices = np.stack(slices)
-    #print(slices)
+    # slices = np.stack(slices)
+    # print(slices)
 
     kernels = np.repeat(CONV_KERNEL_BIG[None, :], slices_num, axis=0)
     REALLY_BIG_KERNEL = np.dstack((kernels[:]))
     print(REALLY_BIG_KERNEL.shape)
-    #REALLY_BIG_KERNEL = np.repeat(CONV_KERNEL_BIG[None, :], slices_num, axis=0)
-    #print(REALLY_BIG_KERNEL)
+    # REALLY_BIG_KERNEL = np.repeat(CONV_KERNEL_BIG[None, :], slices_num, axis=0)
+    # print(REALLY_BIG_KERNEL)
 
-    #convolved_polar = make2DconvolutionWith3Dfilter(np.float32(slices), REALLY_BIG_KERNEL)
+    # convolved_polar = make2DconvolutionWith3Dfilter(np.float32(slices), REALLY_BIG_KERNEL)
     convolved_polar = None
     """
     print("#######")
@@ -189,8 +195,11 @@ def findRingsConnected(img, showInfo=0, thresh_bound=2000, height_bound=0, res_i
         cv.imwrite("../../results/" + res_img_prefix + "polar.png", polar)
         cv.imwrite("../../results/" + res_img_prefix + "convolved_polar.png", convolved_polar)
         cv.imwrite("../../results/" + res_img_prefix + "abs_polar.png", abs_polar)
-        drawGrayHist(contr_img, title='raw contrasted image histogram')
-        drawGrayHistMasked(contr_img, title='raw contrasted image masked histogram')
+        # drawGrayHist(img, title="raw image histogram")
+        # drawGrayHist(contr_img, title='raw contrasted image histogram')
+        drawGrayHistMasked(np.uint8(img), title="Гистограмма распределения яркости входного изображения")
+        drawGrayHistMasked(np.uint8(contr_img),
+                           title='Гистограмма распределения яркости контрастированного входного изображения')
         drawGrayHist(polar, title='polar image histogram')
         # drawGrayHist(abs_polar, int(np.max(abs_polar) + 1), title='abs_polar histogram')
 
@@ -284,7 +293,7 @@ def calculate(imagePath, truthPath=None, info=0, thresh=2000, height=2000, cente
     if truthPath != None:
         truth = cv.imread(truthPath, 1)
         truth = cv.inRange(truth, bot, top)
-        #truth = cv.morphologyEx(truth, cv.MORPH_CLOSE, MORPH_KERNEL)
+        # truth = cv.morphologyEx(truth, cv.MORPH_CLOSE, MORPH_KERNEL)
 
     pred = findRingsConnected(img, showInfo=info, thresh_bound=thresh, height_bound=height, res_img_prefix='big_')
     end_time1 = time.time() - start_time1

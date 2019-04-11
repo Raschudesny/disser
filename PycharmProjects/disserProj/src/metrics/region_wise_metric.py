@@ -99,8 +99,8 @@ def calc_matches_for_region_metrics(im3d_gt, im3d_seg, threshold, debug_folder=N
         #im3d_gt_region[np.isin(im3d_gt_labeled, partlabels[1:])]
 
         # calc index
-        #index = jaccard_index(im3d_seg_region, im3d_gt_region)
-        index = hm(im3d_seg_labeled, im3d_seg_region, im3d_gt_region)
+        index = jaccard_index(im3d_seg_region, im3d_gt_region)
+        #index = hm(im3d_seg_labeled, im3d_seg_region, im3d_gt_region)
         im3d_regionsproduct_labeled, k = morphology.label(im3d_regionsproduct, return_num=True)
         if index >= threshold:
             if k == 1:

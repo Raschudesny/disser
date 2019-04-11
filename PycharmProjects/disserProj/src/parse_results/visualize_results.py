@@ -75,7 +75,9 @@ def visualize_results(results_directory, reverse=True):
         # cmap="YlGnBu_r"
         ax = sns.heatmap(values, xticklabels=ox, yticklabels=oy, linewidth=0.3)
         data.append(values)
-        plt.title(file)
+        plt.title('Значение суммы метрик для интервалов параметров')
+        plt.xlabel('Высота линии')
+        plt.ylabel('Значение порога бинаризации')
         plt.show()
 
     #grid = sns.FacetGrid(data)
