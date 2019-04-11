@@ -85,4 +85,4 @@ def visualize_results(results_directory, reverse=True):
 
 if __name__ == "__main__":
     #visualize_results("../../results/params_results/jac_2500_6600_and_40_170", reverse = False)
-    visualize_results("../../results/params_results/all_rings", reverse=True)
+    visualize_results("../../results/params_results/all_rings1", reverse=True)
