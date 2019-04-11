@@ -20,6 +20,7 @@ if __name__ == "__main__":
     print(images_files)
     print(marked_files)
 
+    values = []
     count = 0
     for image in images_files:
         global_start_time = time.time()
@@ -27,7 +28,11 @@ if __name__ == "__main__":
         image_full_name = os.path.join(images_directory, image)
         truth_full_name = os.path.join(marked_directory, marked_files[count])
         print("Current image is: ", image_full_name)
+        #4749 151
         jac, rwm, pred = calculate(image_full_name, truth_full_name, info=0, thresh=4749, height=151, center_height=40,
                                    only_jaccard_metrics=True)
-        print("Jac=", jac)
-        count +=1
+        #print("Jac=", jac)
+        values.append(jac)
+        count += 1
+
+    print(values)
