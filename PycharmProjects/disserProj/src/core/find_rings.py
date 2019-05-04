@@ -179,8 +179,35 @@ def read_image_slices(input_folder, input_name, start_index=0, step=1):
     bin_result = np.uint8(bin_result)
     cv.imwrite("../../result.png", bin_result)
 
+def use_inverted(img, thresh_bound, showInfo, res_img_prefix):
+    inverted_img = 255 - img
+
+    inv_contr_img = equal_contrast(inverted_img)
+    # преобразуем в полярную систему координат
+    inv_polar = cv.linearPolar(inv_contr_img, (inv_contr_img.shape[1] // 2, inv_contr_img.shape[0] // 2),
+                               inv_contr_img.shape[1] // 2,
+                               cv.WARP_FILL_OUTLIERS)
+    inv_convolved_polar = ndimage.convolve(np.float32(inv_polar), CONV_KERNEL_BIG)
+    inv_abs_polar = np.abs(inv_convolved_polar)
+    inverted_img = None
+    inv_polar = None
+    inv_contr_img = None
+
+    # THRESHOLDING
+    THRESH = thresh_bound
+    ret, inv_bin_result = cv.threshold(inv_abs_polar, THRESH, 255, cv.THRESH_BINARY)
+    inv_bin_result = np.uint8(inv_bin_result)
+    if showInfo == 1:
+        cv.imwrite("../../results/" + res_img_prefix + "inv_bin_result.png", inv_bin_result)
+
+    inv_abs_polar = None
+    return inv_bin_result
 
 def findRingsConnected(img, showInfo=0, thresh_bound=2000, height_bound=0, res_img_prefix=''):
+    # using inverted image to get additional information
+    #inv_bin_res = use_inverted(img, thresh_bound, showInfo, res_img_prefix)
+
+    #contrast correction of image
     contr_img = equal_contrast(img)
 
     # преобразуем в полярную систему координат
@@ -212,6 +239,9 @@ def findRingsConnected(img, showInfo=0, thresh_bound=2000, height_bound=0, res_i
     bin_result = np.uint8(bin_result)
     if showInfo == 1:
         cv.imwrite("../../results/" + res_img_prefix + "bin_result.png", bin_result)
+
+    #ADDIG INVERTED TO RESULTS
+    #bin_result = cv.bitwise_or(inv_bin_res, bin_result)
 
     # MORPHOLOGY
     morph = cv.morphologyEx(bin_result, cv.MORPH_CLOSE, MORPH_KERNEL)
@@ -282,6 +312,7 @@ def findRingsConnected(img, showInfo=0, thresh_bound=2000, height_bound=0, res_i
     centroids = None
     heights = None
     return result
+
 
 
 def calculate(imagePath, truthPath=None, info=0, thresh=2000, height=2000, center_height=2000,

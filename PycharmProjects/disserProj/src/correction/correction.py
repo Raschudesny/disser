@@ -5,7 +5,7 @@ def image_correction(imagePath, truthPath=None, info=0, thresh=5000, height=100,
     start_time = time.time()
     # detection stage
 
-    JAC, RWM, detectedRings = calculate(imagePath, truthPath, info, thresh, height, center_height, only_jaccard_metrics=True)
+    JAC, RWM, detectedRings = calculate(imagePath, truthPath, info, thresh, height, center_height, only_jaccard_metrics=False)
 
     # correction stage
     start_time = time.time()
@@ -24,8 +24,8 @@ def image_correction(imagePath, truthPath=None, info=0, thresh=5000, height=100,
 
 if __name__ == "__main__":
     #5
-    imagePath = "../../papka/AllRings/rings/rings4.png"
-    truthPath = "../../papka/AllRings/marked/marked4.png"
+    imagePath = "../../papka/AllRings/rings/rings2.png"
+    truthPath = "../../papka/AllRings/marked/marked2.png"
     #[4337.00000000 131.00000000 40.00000000 0.35580709]
     #truth = cv.imread(truthPath, 1)
     #truth = cv.inRange(truth, bot, top)
@@ -39,32 +39,7 @@ if __name__ == "__main__":
 
 
     #4749 151
-    image_correction(imagePath, truthPath, info=0, thresh=4749, height=151, center_height=40)
+    image_correction(imagePath, truthPath, info=1, thresh=4749, height=109, center_height=40)
 
     #jac,r , p = calculate(imagePath, truthPath, info=0, thresh=5000, height=100, center_height=40, only_jaccard_metrics=True)
     #print(jac)
-"""
-    TASKS:
-    
-    все собрать вместе
-    
-    поробовать провести сравнение в результатах, чтобы было видно, что мы, оптимизируя параметры, увеличиваем метрику
-    
-    берется образец, делается множество теневых проекций, пропуская через него лучи и получая теневые проекции
-    далее из этих проекций восстанавливается трехмерное изображение объекта
-    
-    на этом изображении могут присутствовать кольцевые артефакты, в их общем понимании, в том случае если на стадии 
-    реконструкции не применялись никакие алгоритмы по их подавлению
-    
-    В случае же, если таковые алгоритмы применялись, мы получаем наши стандартные кольцевые артефакты 
-    
-    
-    причины возникновения рингов в целом: 
-    битые пиксели, небезупречность аппаратуры, ослабление сигнала на любой из стадий + различные устройства 
-    
-    
-    метрики на каждом этапе алгоритма
-    
-    cross validation
-    
-"""
