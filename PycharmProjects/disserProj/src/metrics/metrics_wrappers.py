@@ -19,27 +19,46 @@ def jaccard_metric_my(pred, truth):
     return res
 
 
+def get_label(img, label):
+    result = np.array(img)
+    result[result != label] = 0
+    return result
+
+
+def get_all_labels_which_have_not_null_intersect(labeled_img, labeled_region):
+    res = np.array(labeled_img)
+    result_labeled_areas = np.array(labeled_img)
+    res[labeled_region == 0] = 0
+    intersected_labels_nums = np.unique(res)
+    intersected_labels_nums = intersected_labels_nums > 0
+    result_labeled_areas[np.logical_not(np.isin(result_labeled_areas, intersected_labels_nums))] = 0
+    res = None
+    return result_labeled_areas
+
+
+def DIOU_t(truth, dt, Gdt):
+    up = np.logical_and(truth.astype(bool), dt.astype(bool)).astype(int)
+    down = np.logical_or(Gdt.astype(bool), dt.astype(bool)).astype(int)
+    S_up = cv.countNonZero(up)
+    S_down = cv.countNonZero(down)
+
+    up = None
+    down = None
+    return S_up / S_down
+
+def GIOU_k(pred, gk , Dgk):
+    up = np.logical_and(pred.astype(bool), gk.astype(bool)).astype(int)
+    down = np.logical_or(Dgk.astype(bool), gk.astype(bool)).astype(int)
+    S_up = cv.countNonZero(up)
+    S_down = cv.countNonZero(down)
+
+    up = None
+    down = None
+    return S_up / S_down
+
+
 def more_cool_metric_my(pred, truth):
-    THRESHOLD_COEFFICIENT = 0.4
-    pred = np.uint8(pred)
-    truth = np.uint8(truth)
-
-    # CONNECTED COMPONENTS DETECTION
-    connectivity = 8
-    output1 = cv.connectedComponentsWithStats(pred, connectivity, cv.CV_32S)
-    num_labels1 = output1[0]
-    labels1 = output1[1]
-    stats1 = output1[2]
-    areas1 = stats1[:, cv.CC_STAT_AREA]
-    print(areas1)
-
-    output2 = cv.connectedComponentsWithStats(truth, connectivity, cv.CV_32S)
-    num_labels2 = output2[0]
-    labels2 = output2[1]
-    stats2 = output2[2]
-    areas2 = stats2[:, cv.CC_STAT_AREA]
-    print(areas2)
-
+    THRESHOLD_COEFFICIENT = 0.1
     OO = 0
     OM = 0
     MO = 0
@@ -50,54 +69,89 @@ def more_cool_metric_my(pred, truth):
     w5 = 0.75
     w6 = 0.75
 
-    for label in range(1, num_labels1):
-        temp = cv.bitwise_and(cv.inRange(labels1, label, label), truth)
-        components_num = cv.connectedComponentsWithStats(temp, connectivity, cv.CV_32S)[0]
-        components_num -= 1
-        area1 = cv.countNonZero(temp)
-        area2 = cv.countNonZero(cv.bitwise_or(temp, cv.inRange(labels1, label, label)))
-        DIOU = (float(area1) / float(area2))
-        print('label =', label, 'DIOU = ', DIOU)
-        if DIOU >= THRESHOLD_COEFFICIENT:
-            if components_num == 1:
-                OO += 1
-            elif components_num > 1:
-                OM += 1
+    pred = np.uint8(pred)
+    truth = np.uint8(truth)
 
-    for label in range(1, num_labels2):
-        temp = cv.bitwise_and(cv.inRange(labels2, label, label), pred)
-        components_num = cv.connectedComponentsWithStats(temp, connectivity, cv.CV_32S)[0]
-        components_num -= 1
-        area1 = cv.countNonZero(temp)
-        area2 = cv.countNonZero(cv.bitwise_or(temp, cv.inRange(labels2, label, label)))
-        GIOU = (float(area1) / float(area2))
-        print('label =', label, 'GIOU = ', GIOU)
-        if (components_num > 1) and (GIOU >= THRESHOLD_COEFFICIENT):
-            MO += 1
+    # CONNECTED COMPONENTS DETECTION
+    connectivity = 8
+    output1 = cv.connectedComponentsWithStats(truth, connectivity, cv.CV_32S)
+    N = output1[0]
+    G = output1[1]
+    stats1 = output1[2]
+    areas1 = stats1[:, cv.CC_STAT_AREA]
+
+
+    output2 = cv.connectedComponentsWithStats(pred, connectivity, cv.CV_32S)
+    M = output2[0]
+    D = output2[1]
+    stats2 = output2[2]
+    areas2 = stats2[:, cv.CC_STAT_AREA]
+
+
+    G = np.uint8(G)
+    D = np.uint8(D)
+
+
+
+    for label_dt in range(1, M):
+        dt = get_label(D, label_dt)
+        tempG = np.array(G)
+        tempG[dt == 0] = 0
+        num_of_intersections = cv.countNonZero(np.unique(tempG))
+
+        if num_of_intersections == 1:
+            Gdt = get_all_labels_which_have_not_null_intersect(G, dt)
+            diou_t = DIOU_t(truth, dt, Gdt)
+            print(label_dt, diou_t)
+            if diou_t > THRESHOLD_COEFFICIENT :
+                OO = OO + 1
+        elif num_of_intersections > 1:
+            Gdt = get_all_labels_which_have_not_null_intersect(G, dt)
+            diou_t = DIOU_t(truth, dt, Gdt)
+            print(label_dt, diou_t)
+            if diou_t > THRESHOLD_COEFFICIENT:
+                OM = OM + 1
+
+        dt = None
+        tempG = None
+        Gdt = None
+
+    for label_gk in range(1, N):
+        gk = get_label(G, label_gk)
+        tempD = np.array(D)
+        tempD[gk == 0] = 0
+        num_of_intersections = cv.countNonZero(np.unique(tempD))
+        if num_of_intersections > 1:
+            Dgk = get_all_labels_which_have_not_null_intersect(D, gk)
+            giou_k = GIOU_k(pred, gk, Dgk)
+            print(label_gk, giou_k)
+            if giou_k > THRESHOLD_COEFFICIENT:
+                MO = MO + 1
+
+        gk = None
+        tempD = None
+        Dgk = None
+
+    N = N - 1
+    M = M - 1
 
     print('OO =', OO)
     print('OM =', OM)
     print('MO =', MO)
 
-    num_labels1 -= 1
-    num_labels2 -= 1
-    print('num_labels1 =', num_labels1)
-    print('num_labels2 =', num_labels2)
+    weights1 = np.asarray((w1, w2, w3))
+    weights2 = np.asarray((w4, w5, w6))
+    values = np.asarray((OO, OM, MO))
 
-    num_labels1 = float(num_labels1)
-    num_labels2 = float(num_labels2)
-    OO = float(OO)
-    OM = float(OM)
-    MO = float(MO)
-
-    DR = w1 * (OO / num_labels1) + w2 * (OM / num_labels1) + w3 * (MO / num_labels1)
-    RA = w4 * (OO / num_labels2) + w5 * (OM / num_labels2) + w6 * (MO / num_labels2)
+    DR = (np.sum(weights1 * values) / N)
+    RA = (np.sum(weights2 * values) / M)
 
     print('DR = ', DR)
     print('RA = ', RA)
-    RM = float(2.0 * float(DR) * float(RA)) / float(DR + RA)
-    print("RM = ", RM)
-    return RM
+
+    RWM = (2 * DR * RA) / (DR + RA)
+    print("RWM = ", RWM)
+    return RWM
 
 
 def jaccard_metric(pred, truth):
@@ -105,7 +159,8 @@ def jaccard_metric(pred, truth):
 
 
 def more_cool_metric(pred, truth):
-    return region_metrics(truth, pred)
+    return more_cool_metric_my(pred, truth)
+    #return region_metrics(truth, pred)
 
 
 def temp_calculate(imagePath, truthPath, info, thresh=2000, height=2000):

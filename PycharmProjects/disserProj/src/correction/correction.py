@@ -24,8 +24,8 @@ def image_correction(imagePath, truthPath=None, info=0, thresh=5000, height=100,
 
 if __name__ == "__main__":
     #5
-    imagePath = "../../papka/AllRings/rings/rings2.png"
-    truthPath = "../../papka/AllRings/marked/marked2.png"
+    imagePath = "../../papka/AllRings/rings/rings1.png"
+    truthPath = "../../papka/AllRings/marked/marked1.png"
     #[4337.00000000 131.00000000 40.00000000 0.35580709]
     #truth = cv.imread(truthPath, 1)
     #truth = cv.inRange(truth, bot, top)
@@ -39,7 +39,7 @@ if __name__ == "__main__":
 
 
     #4749 151
-    image_correction(imagePath, truthPath, info=1, thresh=4749, height=109, center_height=40)
+    image_correction(imagePath, truthPath, info=0, thresh=5500, height=100, center_height=40)
 
     #jac,r , p = calculate(imagePath, truthPath, info=0, thresh=5000, height=100, center_height=40, only_jaccard_metrics=True)
     #print(jac)

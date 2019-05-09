@@ -30,9 +30,9 @@ if __name__ == "__main__":
         print("Current image is: ", image_full_name)
         #4749 151
         jac, rwm, pred = calculate(image_full_name, truth_full_name, info=0, thresh=4749, height=151, center_height=40,
-                                   only_jaccard_metrics=True)
+                                   only_jaccard_metrics=False)
         #print("Jac=", jac)
-        values.append(jac)
+        values.append(rwm)
         count += 1
 
     print(values)
