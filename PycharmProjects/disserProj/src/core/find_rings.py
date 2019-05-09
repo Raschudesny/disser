@@ -356,8 +356,8 @@ def calculate(imagePath, truthPath=None, info=0, thresh=2000, height=2000, cente
         cv.imwrite("../../results/raw_input.png", img)
         cv.imwrite("../../results/truth_image.png", truth)
         cv.imwrite("../../results/predicted_image.png", pred)
-        print("--- Rings detection %s seconds ---" % end_time1)
-        print("--- Center rings detection  takes: %s seconds ---" % end_time2)
-        print("--- Metrics calculation takes: %s seconds ---" % end_time3)
+    print("--- Rings detection %s seconds ---" % end_time1)
+    print("--- Center rings detection  takes: %s seconds ---" % end_time2)
+    print("--- Metrics calculation takes: %s seconds ---" % end_time3)
 
     return jac_res, rwm_res, pred

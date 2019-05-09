@@ -5,11 +5,10 @@ from multiprocessing import Pool
 def runnableCalculate(input):
     JAC, RWM, PRED = calculate(input[0], input[1], input[2], input[3], input[4], input[5], input[6])
     PRED = None
-    RWM = None
     thresh = input[3]
     height = input[4]
     center_height = input[5]
-    return (thresh, height, center_height, JAC)
+    return (thresh, height, center_height, RWM)
 
 
 # imagePath, truthPath, info, thresh, height, center_height, OnlyJac
