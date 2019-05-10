@@ -29,7 +29,8 @@ if __name__ == "__main__":
         truth_full_name = os.path.join(marked_directory, marked_files[count])
         print("Current image is: ", image_full_name)
         #4749 151
-        jac, rwm, pred = calculate(image_full_name, truth_full_name, info=0, thresh=4749, height=151, center_height=40,
+        #5435 221
+        jac, rwm, pred = calculate(image_full_name, truth_full_name, info=0, thresh=5435, height=221, center_height=40,
                                    only_jaccard_metrics=False)
         #print("Jac=", jac)
         values.append(rwm)
