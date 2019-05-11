@@ -25,7 +25,7 @@ def create_params(imgPath, truthPath, info, thresh_start, thresh_end, thresh_ste
             # center_height
             temp_res.append(40)
             # only jac
-            temp_res.append(True)
+            temp_res.append(False)
             results.append(temp_res)
     return results
 
@@ -124,7 +124,7 @@ def find_params_together(images_directory, marked_directory, images_files, marke
     thresh_interval = 3000
     height_interval = 200
 
-    p = Pool(processes=12)
+    p = Pool(processes=6)
     while thresh_interval != 0:
         if int(thresh_interval / 10) == 0:
             thresh_step = 1

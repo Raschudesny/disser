@@ -39,7 +39,8 @@ if __name__ == "__main__":
 
 
     #4749 151
-    image_correction(imagePath, truthPath, info=0, thresh=5500, height=100, center_height=40)
+    #5435 221
+    image_correction(imagePath, truthPath, info=1, thresh=5435, height=221, center_height=40)
 
     #jac,r , p = calculate(imagePath, truthPath, info=0, thresh=5000, height=100, center_height=40, only_jaccard_metrics=True)
     #print(jac)

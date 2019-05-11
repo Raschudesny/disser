@@ -91,7 +91,10 @@ def more_cool_metric_my(pred, truth):
     G = np.uint8(G)
     D = np.uint8(D)
 
-
+    if N == 1:
+        return 0.0
+    if M == 1:
+        return 0.0
 
     for label_dt in range(1, M):
         dt = get_label(D, label_dt)
@@ -102,13 +105,13 @@ def more_cool_metric_my(pred, truth):
         if num_of_intersections == 1:
             Gdt = get_all_labels_which_have_not_null_intersect(G, dt)
             diou_t = DIOU_t(truth, dt, Gdt)
-            print(label_dt, diou_t)
+            #print(label_dt, diou_t)
             if diou_t > THRESHOLD_COEFFICIENT :
                 OO = OO + 1
         elif num_of_intersections > 1:
             Gdt = get_all_labels_which_have_not_null_intersect(G, dt)
             diou_t = DIOU_t(truth, dt, Gdt)
-            print(label_dt, diou_t)
+            #print(label_dt, diou_t)
             if diou_t > THRESHOLD_COEFFICIENT:
                 OM = OM + 1
 
@@ -124,7 +127,7 @@ def more_cool_metric_my(pred, truth):
         if num_of_intersections > 1:
             Dgk = get_all_labels_which_have_not_null_intersect(D, gk)
             giou_k = GIOU_k(pred, gk, Dgk)
-            print(label_gk, giou_k)
+            #print(label_gk, giou_k)
             if giou_k > THRESHOLD_COEFFICIENT:
                 MO = MO + 1
 
@@ -135,9 +138,9 @@ def more_cool_metric_my(pred, truth):
     N = N - 1
     M = M - 1
 
-    print('OO =', OO)
-    print('OM =', OM)
-    print('MO =', MO)
+    #print('OO =', OO)
+    #print('OM =', OM)
+    #print('MO =', MO)
 
     weights1 = np.asarray((w1, w2, w3))
     weights2 = np.asarray((w4, w5, w6))
@@ -145,12 +148,19 @@ def more_cool_metric_my(pred, truth):
 
     DR = (np.sum(weights1 * values) / N)
     RA = (np.sum(weights2 * values) / M)
-
-    print('DR = ', DR)
-    print('RA = ', RA)
+    if DR == np.nan :
+        DR = 0
+    if RA == np.nan :
+        RA = 0
+    if DR + RA == 0 :
+        return  0.0
+    #print('DR = ', DR)
+    #print('RA = ', RA)
 
     RWM = (2 * DR * RA) / (DR + RA)
-    print("RWM = ", RWM)
+    if RWM == np.nan:
+        return 0.0
+    #print("RWM = ", RWM)
     return RWM
 
 
