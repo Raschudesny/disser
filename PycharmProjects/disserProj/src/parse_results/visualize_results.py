@@ -75,7 +75,7 @@ def visualize_results(results_directory, reverse=True):
         # cmap="YlGnBu_r"
         ax = sns.heatmap(values, xticklabels=ox, yticklabels=oy, linewidth=0.3)
         data.append(values)
-        plt.title('Значение суммы метрик для интервалов параметров')
+        plt.title('Значение суммы коэффициентов Жаккара\n для интервалов параметров')
         plt.xlabel('Высота линии')
         plt.ylabel('Значение порога бинаризации')
         plt.show()
@@ -87,4 +87,4 @@ def visualize_results(results_directory, reverse=True):
 
 if __name__ == "__main__":
     #visualize_results("../../results/params_results/jac_2500_6600_and_40_170", reverse = False)
-    visualize_results("../../results/params_results/all_rings2", reverse=True)
+    visualize_results("../../results/params_results/all_rings1", reverse=True)

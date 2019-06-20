@@ -208,6 +208,7 @@ def findRingsConnected(img, showInfo=0, thresh_bound=2000, height_bound=0, res_i
     #inv_bin_res = use_inverted(img, thresh_bound, showInfo, res_img_prefix)
 
     #contrast correction of image
+    #contr_img = img
     contr_img = equal_contrast(img)
 
     # преобразуем в полярную систему координат

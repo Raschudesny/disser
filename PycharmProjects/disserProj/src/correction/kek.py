@@ -11,6 +11,7 @@ def find_all_files_in_dir(directory_name):
 
 
 if __name__ == "__main__":
+    """
     images_directory = "../../papka/AllRings/rings"
     marked_directory = "../../papka/AllRings/marked"
     images_files = find_all_files_in_dir(images_directory)
@@ -37,3 +38,12 @@ if __name__ == "__main__":
         count += 1
 
     print(values)
+    print(sum(values))
+    """
+    img_file = "../../papka/AllRings/rings/rings5.PNG"
+    output_file = "../../output_img.png"
+    img = cv.imread(img_file, 0)
+    polar_img = cv.linearPolar(img, (img.shape[1] // 2, img.shape[0] // 2),
+                               img.shape[1] // 2,
+                               cv.WARP_FILL_OUTLIERS)
+    cv.imwrite(output_file, polar_img)
